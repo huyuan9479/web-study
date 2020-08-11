@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        // (1)数组的增加
+
+        // ary.push()   向数组末尾添加元素，返回的是添加后新数组的长度，原有数组改变
+        // ary.unshift()  向数组开头添加元素，返回的是添加后新数组的长度，原有数组改变
+        var ary1=[1,2,3];
+        var res3 = ary1.push(9);
+        console.log(res3);//4
+        var res1=ary1.unshift(6);
+        console.log(res1); //5   返回的是新数组的长度
+        // ary.splice(n,m,x)从索引n开始删除m个元素，把新增的元素X放在索引n的前面，把删除的元素当成一个新数组返回，原有数组改变。
+        // ary.splice(n,0,x)从索引n开始删除0个元素，把新增加的元素x放在索引n的前面，返回的是一个空数组，原有数组改变。
+        // ary.splice(n,m)从索引n开始删除m个元素，把删除的内容当做新数组返回，原有数组改变
+        // splice(0,0,x)----->unshift
+
+        var spliceAry = ['a','c','d','e'];
+        console.log(spliceAry.splice(1,2,'b'));//返回删除的元素['c','d']
+        console.log(spliceAry)//['a','b','e']
+        console.log(spliceAry.splice(1,0,'b'));//[]
+        console.log(spliceAry)//['a','b','c','d','e']
+        
+
+        // (2)数组的删除
+
+        // ary.pop() 删除数组的最后一项，返回的是删除的那一项，原有数组改变
+        // ary.shift() 删除数组的的第一项，返回的是删除的那一项，原有数组改变
+        var ary2=[5,8,3,4,6];
+        var res2=ary2.shift();
+        console.dir(res2);//5 返回数组第一项
+        // 删除数组最后一项的内容 ary2.splice(ary2.length-1,1)  
+        //ary2.length-1 数组最后一项的内容         ary2.length-=1     ary2.length--
+            var ary3=[5,8,3,4,6];
+            ary3.splice(ary3.length-1,1);
+            ary3.length-=1;
+            console.dir(ary3);//输出的是[5,8,3,4]
+
+        
+        // (3)数组的查询和复制
+
+        // slice(n,m)从索引n开始，找到索引m处，把找到的内容作为新的数组返回，原有数组不改变        
+        // slice(n-1,m)把数组的第n项到第m项提取出来
+        // slice(n) 从索引n开始查找到数组末尾
+        // slice(0) slice() 将原有数组复制一份 属于数组克隆  
+        // concat() 也可以实现数组克隆   
+        // concat的本意是实现数组的拼接 ary.concat(ary2) 把两个数组进行拼接
+
+        // ES6为Array增加了find()，findIndex函数。
+        // find()返回与指定条件匹配的第一个实例，如果查不到不会继续查找其他匹配的实例，找不到返回undefined。
+        // findIndex()返回指定条件的第一个元素的索引，找不到就返回-1。
+        // indexOf() 方法可返回某个指定的字符串值在字符串中首次出现的位置。
+
+
+        // (4)数组转化为字符串
+
+        // toString把数组的每一项拿出来用逗号隔开，原有数组不变
+        // join("+")把数组的每一项拿出来用指定分隔符隔开
+
+
+        // (5)数组求和
+
+        var ary=[5,8,3,4,6];
+        var str=ary.join("+");
+        var total=eval(str);
+        console.dir(total);  //将指定字符串变成真正的表达式执行
+        var ary=[5,8,3,4,6];
+            var total=0;
+            for(var i=0;i<ary.length;i++){
+                total+=ary[i];
+            }
+            console.dir(total);  
+
+
+        // (6)数组的排列和排序
+
+        // reverse() 把数组倒过来排序，原有数组改变
+        // sort 可以实现由大到小或者由小到大的排序 但是直接写sort只能排序十以内的数字  ary.sort(function(a,b){return (a-b);})
+        // 一些常用的方法 但是不兼容
+
+        
+        
+    </script>
+</body>
+</html>

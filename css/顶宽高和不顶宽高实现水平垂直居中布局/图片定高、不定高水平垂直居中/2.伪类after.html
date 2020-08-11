@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>图片::after垂直居中</title>
+        <style>
+            .box {
+                width: 100%;
+                height: 800px;
+                border: 1px solid red;
+                text-align: center;
+            }
+
+            .box::after {
+                content: '';
+                display: inline-block;
+                vertical-align: middle;
+                height: 100%;
+            }
+            img {
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div class="box">
+                <img src="http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/03/ChMkJlbKx2qIYePJAAV1FpAX8EkAALHzQInoVcABXUu313.jpg" alt="">
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>grid布局</title>
+        <style>
+            .box{
+                width: 400px;
+                height: 400px;
+                margin: 0 auto;
+                background: #999999;
+                /* 网格布局 */
+                /* 兼容性相对比较差 */
+                display: grid;
+            }
+
+            .children-box{
+                width: 200px;
+                height: 100px;
+                background: red;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div class="box">
+                <div class="children-box">
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

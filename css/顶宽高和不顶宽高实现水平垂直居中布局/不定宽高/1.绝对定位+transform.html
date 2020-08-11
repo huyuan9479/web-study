@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>绝对定位 + transform</title>
+        <style>
+            .box{
+                width: 400px;
+                height: 400px;
+                margin: 0 auto;
+                background: #999999;
+                position: relative;
+            }
+
+            .children-box{
+                background: red;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                /* transform 属性向元素应用 2D 或 3D 转换。该属性允许我们对元素进行旋转、缩放、移动或倾斜。 */
+                /* translate(x,y)	定义 2D 转换。 */
+                transform: translate(-50% , -50%);
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div class="box">
+                <div class="children-box">Hello word!</div>
+            </div>
+        </div>
+    </body>
+</html>

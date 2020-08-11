@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>js数据类型</title>
+</head>
+<body>
+    <h1>js数据类型</h1>
+    <script>
+        // js有五种数据类型：String,Null,Boolean,Number,Undefined,Symbol（ES6）,这是基本类型（单类型）
+        // 还有一种复杂数据类型的Object,叫做引用类型,其中包含了Data、function、Array等。这三种是常规用的。
+
+        // ********基本数据类型与引用数据类型的区别********
+        // 基本数据类型是指存放在栈(stack)中的简单数据段，数据大小确定，内存空间大小可以分配，它们是直接按值存放的，所以可以直接按值访问
+        // 引用类型是存放在堆(heap)内存中的对象，变量其实是保存的在栈内存中的一个指针（保存的是堆内存中的引用地址），这个指针指向堆内存。
+        // 引用类型数据在栈内存中保存的实际上是对象在堆内存中的引用地址。通过这个引用地址可以快速查找到保存中堆内存中的对象
+
+        //typeof操作符,这种方法对于一些常用的类型来说那算是毫无压力，
+        //比如Function、String、Number、Undefined等，但是要是检测Array的对象就不起作用了。 
+        //利用typeof除了array和null判断为object外，其他的都可以正常判断
+
+        console.log(typeof null); // object
+        console.log(typeof function () {
+        return 1;
+        }); // function
+        console.log(typeof '123'); // string
+        console.log(typeof 1); // number
+        console.log(typeof a); // undefined
+        console.log(typeof undefined); // undefined
+        console.log(typeof [1,2,3]); // object
+        console.log(typeof {'id':11});//object
+        console.log(typeof true);//boolean
+        console.log(typeof console.log);//function
+        console.log(typeof NaN);//number
+         
+
+        // { } 、[ ] 输出 object。
+        // 注意一点：NaN 是 Number 中的一种，非Number 。
+
+        // >>>>>>>>><<<<<<<<<
+        // Number('as') == NaN ?
+        // 肯定是false， Number(‘as’) 输出 NaN。
+        // 注）用 isNaN() 检测是否是非数值型,是非数值型,输出true;是数值型，输出false
+        isNaN('123')//false
+        isNaN(123)//false
+        isNaN(Number('as'))//true
+
+        // NaN == NaN是 false。其实 js 规定的NaN 不等于NaN。
+
+        // ****************************************
+        // 如何判断数据类型
+        // 1、typeof 操作符
+        // 2、toString(),其他类型转成 string 的方法  
+        // 支持：number、boolean、string、object ，不支持：null 、undefined
+        // let b = undefined;
+        // console.log(b.toString()) //报错Uncaught TypeError: Cannot read property 'toString' of undefined
+        // 3、toLocaleString()，把数组转成本地字符串 
+        let arr = ['1','2','3','4','5'];
+        console.log(arr.toLocaleString()); //1,2,3,4,5
+        
+        // 4.检测数组类型的方法   
+        // (1)instanceof  操作符
+        let arr1 = ['1','2','3','4','5'];
+        console.log(arr1 instanceof Array);//true
+        let test = 1;
+        console.log(test instanceof Array);//false
+        // (2)对象的 constructor 属性
+        console.log(arr1.constructor === Array);//true
+        console.log(test.constructor === Array);//false
+        // (3)Array.isArray( ) 检验值是否为数组
+        console.log(Array.isArray(arr1));//true
+        console.log(Array.isArray(test));//false
+        //(4)通过Object.prototype.toString.call()判断
+        Object.prototype.toString.call(arr1) === '[object Array]';//true
+        // 它强大的地方在于不仅仅可以检验是否为数组，比如是否是一个函数，是否是数字等等
+
+        // JavaScript 中一切都是对象，任何都不例外，对所有值类型应用 Object.prototype.toString.call() 方法结果如下：
+        console.log(Object.prototype.toString.call(123));    //[object Number]
+        console.log(Object.prototype.toString.call('123'));    //[object String]
+        console.log(Object.prototype.toString.call(undefined));    //[object Undefined]
+        console.log(Object.prototype.toString.call(true));    //[object Boolean]
+        console.log(Object.prototype.toString.call({}));    //[object Object]
+        console.log(Object.prototype.toString.call([]));    //[object Array]
+        console.log(Object.prototype.toString.call(function(){}));    //[object Function]
+        console.log(Object.prototype.toString.call(null));    //[[object Null]]
+
+        // js标准库
+        // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+
+        // ------------------------
+        // null 和 undefined 有什么区别？
+        // Null 只有一个值，是 null,不存在的对象。
+        // Undefined只有一个值，是undefined。没有初始化。undefined 是从 null 中派生出来的。
+        // 简单理解就是：undefined 是没有定义的，null 是定义了但是为空。
+
+
+        // +++++++++++++++总 结++++++++++++++++
+        // 1.Undefined 类型
+        // 只有一个值。在使用var 声明变量但未对其加初始化时，这个变量就是undefined。
+        // 2.Null 类型
+        // 只有一个值。null是表示一个空对象指针，这也是typeof操作符检测 null 值时会返回 object 的原因。
+        // 3.Boolean 类型
+        // 使用最多的一个类型，有两个字面值，分别是true、false。true不一定等于1,false不一定等于0。
+        // boolean类型的字面值是区分大小写的。True和False是标识符
+        // 4.Number 类型
+        // 数字类型，表示数据的整数和浮点数。某些语言中也称为“双精度值”。
+        // var intNum = 55;十进制
+        // var num = 012;八进制
+        // var octalNum = 0x23;十六进制
+        // 5.String 类型
+        // 字符串可以有单引号、双引号表示。字符串是不可变的，一旦创建，值就不能改变
+        // 要改变某个变量保存的字符串，首先要销毁原来的字符串，然后于用另一个包含的字符串填充该变量。
+        // 注意：toString()可以输出二进制、八进制、十进制，十六进制。
+        // null和undefined没有toString()方法，用String函数不返回这两个值的字面量。
+        // 6.Object 类型
+        // ECMAjavascript中的对象其实就是一组数据和功能的集合。对象可以通过执行new操作符后跟要创建的对象类型的名称来创建。
+        // 创建object类型的实例并为其添加属性（或）方法，就可以自定义创建对象。
+        // 如：var o = new Object( );
+        // object 的每个实例都有下列属性和方法：
+        // constructor：保存着用于创建当前对象的函数。（构造函数)constructor就是object();
+        // hasOwnProperty(propertyName):用于检查给定的当前属性在当前对象实例中）而不是在实例原型中）是否存在。
+        //      其中，作为参数的属性名（propertyName)必须以字符串形式指定（例如：o.hasOwnProperty(“name”))。
+        // isPrototypeOf(object):用于检查传入的对象是否是传入对象原型。
+        // propertyIsEnumerable(propertyName):用于检查给定属性是否能够用for-in语句。与hasOwnProperty（）方法一样，作为参数的属性名必须以字符串形式指定。
+        // toLocaleString( ):返回对象的字符串表示，该字符串与执行环境的地区对应。
+        // toString( ):返回对象的字符串表示。
+        // valueOf( ):返回对象的字符串、数值或者布尔值表示。通常与toString( )方法的返回值得相同。
+        // ECMAJS中object是所有对象的基础，因些所有对象都具有这些基本的属性和方法。
+        // 7.Symbol 类型
+        // Symbol 类型的对象永远不相等，即便创建的时候传入相同的值。因此，可以用解决属性名冲突的问题（适用于多少编码），做为标记。
+        // 这是 es6 新增的数据类型。
+        typeof Symbol === 'symbol';//true
+        Symbol('key') !== Symbol('key');//true
+        Symbol('key') === Symbol('key');//false
+
+
+        // js中==和===的区别
+        // 简单来说： == 代表相同（值相同）， ===代表严格相同（类型和值都相同）, 为啥这么说呢， 
+        // 这么理解： 当进行双等号比较时候： 先检查两个操作数数据类型，如果相同， 则进行===比较， 
+        // 如果不同， 则愿意为你进行一次类型转换， 转换成相同类型后再进行比较， 而===比较时， 如果类型不同，直接就是false.
+ 
+        // 操作数1 == 操作数2，  操作数1 === 操作数2
+
+        // 比较过程：
+　　    // 双等号==： 
+　　    //（1）如果两个值类型相同，再进行三个等号(===)的比较
+　　    //（2）如果两个值类型不同，也有可能相等，需根据以下规则进行类型转换在比较：
+　　　　//    1）如果一个是null，一个是undefined，那么相等
+　　　　//    2）如果一个是字符串，一个是数值，把字符串转换成数值之后再进行比较
+
+　　    // 三等号===:
+　　    //（1）如果类型不同，就一定不相等
+　　    //（2）如果两个都是数值，并且是同一个值，那么相等；如果其中至少一个是NaN，那么不相等。（判断一个值是否是NaN，只能使用isNaN( ) 来判断）
+　　    //（3）如果两个都是字符串，每个位置的字符都一样，那么相等，否则不相等。
+　　    //（4）如果两个值都是true，或是false，那么相等
+　　    //（5）如果两个值都引用同一个对象或是函数，那么相等，否则不相等
+　　    //（6）如果两个值都是null，或是undefined，那么相等
+    </script>
+</body>
+</html>

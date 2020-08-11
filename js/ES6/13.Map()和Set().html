@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map()和Set</title>
+</head>
+<body>
+    <script>
+        // 一、Map()
+        // Map存储key和对应的value。
+        // Map()的特点：
+        // 1.Map是一组键值对的形式，具有极快的查找速度；
+        // 2.Map 对象保存键值对。任何值(对象或者原始值) 都可以作为一个键或一个值。Set类似于数组，而Map就类似于键值对（Key, Value）；
+        // 3.Map是键值对的形式，通过键可以取到对应的值，键名不能重复；
+        // 4.ES6 提供了 Map 数据结构。它类似于对象，也是键值对的集合，但是“键”的范围不限于字符串，各种类型的值（包括对象）都可以当作键；
+        // 5.通过展开运算符(…)可以把Map集合转换成包含多个数组的数组。
+        
+        // 背景，举个例子，假设要根据同学的名字查找对应的成绩，如果用Array实现，
+        // 需要两个Array,给定一个名字，要查找对应的成绩，就先要在names中找到对应的位置，
+        // 再从scores取出对应的成绩，Array越长，耗时越长。
+        var names = ['Michael', 'Bob', 'Tracy'];
+        var scores = [95, 75, 85];
+        // 解决方法：使用Map:只需要一个“名字”-“成绩”的对照表，直接根据名字查找成绩，
+        // 无论这个表有多大，查找速度都不会变慢。用JavaScript写一个Map如下：
+        let m = new Map([['li',96],['wang',99],['liu',98]]);
+        console.log(m.get('wang'));//99
+
+        // Map用法实例：
+        let myMap = new Map([['li',96],['wang',99],['liu',98]]);
+        console.log(myMap);
+        // Map(3) {"li" => 96, "wang" => 99, "liu" => 98}
+
+        // Map的属性值说明：
+        // var x=new Map();
+        // x.set(‘a’,‘b’)添加键值
+        // x.has(‘a’)判断是否存在某个键值,返回true或false
+        // x.delete(‘a’)删除某个键
+        // x.get(‘x’)获取键对应的值
+        // x.size获取有多少个元素
+        // x.clear()，注“括号中没有参数”，清楚x对象中的所有元素。
+        // keys()：返回键名的遍历器。
+        // values()：返回键值的遍历器。
+        // entries()：返回所有成员的遍历器。
+        // forEach()：遍历 Map 的所有成员。
+
+        // Map使用方法：
+        // //初始化Map对象
+        let mp = new Map();
+        //使用set添加键值
+        mp.set('小芳',18);
+        mp.set('小明',20);
+        mp.set('小红',22);
+        console.log(mp);
+        // Map(3) {"小芳" => 18, "小明" => 20, "小红" => 22}
+
+        //使用has判断某个键是否存在
+        console.log(mp.has('小红'));//true
+        console.log(mp.has('小强'));//false
+
+        //使用delete可以删除某个键
+        mp.delete('小明');
+        console.log(mp);
+        console.log(mp.size);//2
+        // Map(2) {"小芳" => 18, "小红" => 22}
+
+        //使用get可以获取某个键的值
+        console.log(mp.get('小红'));//22
+        
+        //清楚所有的元素
+        mp.clear();
+        console.log(mp);
+        // Map(0) {}
+
+        // 注：由于一个key只能对应一个value，所以，多次对一个key放入value，后面的值会把前面的值冲掉.
+
+        // 实例：
+        let exam = new Map([
+            ['name','小芳'],
+            ['title','今天吃了什么']
+        ])
+        console.log(exam);
+        // Map(2) {"name" => "小芳", "title" => "今天吃了什么"}
+        console.log(exam.size);//2
+        // 上面代码在新建 Map 实例时，就指定了两个键name和title。
+
+        // Map构造函数接受数组作为参数，实际上执行的是下面的算法。下面的代码使用forEach实现：
+        let item = [
+            ['color','red'],
+            ['name','polo']
+        ]
+        let ma = new Map();
+        // //使用forEach对Map对象进行遍历，使用set()方法把item中的元素添加到Map对象中
+        item.forEach(([x,y]) => ma.set(x,y));
+        console.log(ma);
+        // Map(2) {"color" => "red", "name" => "polo"}
+
+        // 用法看下面实例：
+        let example = new Map([
+            ['name', 'jack'],
+            ['color', 'red'],
+            ['title', 'today']
+        ]);
+        //使用keys()方法获取键名
+        for(let i of example.keys()){
+            console.log(i);
+        }
+        // name
+        // color
+        // title
+
+        // //使用values()获取键值
+        for(let i of example.values()){
+            console.log(i)
+        }
+        // jack
+        // red
+        // today
+
+        // //使用entries()获取键值对
+        for(let i of example.entries()){
+            console.log(i[0],i[1])
+        }
+        // name jack
+        // color red
+        // title today
+
+        // 上述可以等同于
+        for(let [x,y] of example.entries()){
+            console.log(x,y);
+        }
+        // name jack
+        // color red
+        // title today
+
+        for(let [x,y] of example){
+            console.log(x,y)
+        }
+        // name jack
+        // color red
+        // title today
+
+        // Map 结构转为数组结构，比较快速的方法是使用扩展运算符（…）
+        let mf = new Map([
+            [1,'one'],
+            [2,'two'],
+            [3,'three'],
+            [4,'four']
+        ]);
+        console.log([...mf]);
+        // (4) [Array(2), Array(2), Array(2), Array(2)]
+        console.log([...mf.keys()]);//[1, 2, 3, 4]
+        console.log([...mf.values()]);//["one", "two", "three", "four"]
+        console.log([...mf.entries()]);
+        // [Array(2), Array(2), Array(2), Array(2)]
+
+        // ————————————————————————————————————————————————————————————————————————————
+        // 二、Set()
+        // 特点：
+        // 1.是一组key的集合，但不存储value；
+        // 2.对象允许你存储任何类型的唯一值，无论是原始值或者是对象引用。Set中,key不能重复。
+        //   如果出现重复的key，Set会自动过滤。Set没有索引，它的键和值是一个。
+        // 3.Set()是一个类似数组解构，但它不是数组。它本身就是一个构造函数。
+        // 4.它最主要的作用是去重。
+        // 5.可以使用Array.from()把它变成一个数组。
+        // 6.通过展开运算符(…)可以把Set集合转换成一个数组。
+
+        let set = new Set([1,2,2,3,3,4,5,6,6]),
+            arry = [...set];
+        console.log(arry);//[1, 2, 3, 4, 5, 6]
+        
+        // 用法如下：
+        let set1 = new Set([1,1,2,2,3,4,5,5]);
+        console.log(set1);//Set(5) {1, 2, 3, 4, 5}
+
+        // 属性说明：
+        // var s=new Set();
+        // s.add(‘a’);添加一个元素
+        // s.delete(‘a’);删除一个元素
+        // s.size;获取元素的数量
+        // s.clear()清除对象中的所有元素。
+        // s.has(‘a’)判断s对象中是否有某个元素，返回true或false
+
+        let st = new Set();
+        st.add(2);
+        st.add('2');
+        st.add('apple');
+        console.log(st);
+        // Set(3) {2, "2", "apple"}
+        console.log(st.size);//3
+
+        console.log(st.has('apple'));//true
+
+        st.delete('apple');
+        console.log(st);//Set(2) {2, "2"}
+
+        st.clear();
+        console.log(st);//Set(0) {}
+
+        // 可以使用多个add()连起来：
+        let s = new Set();
+        s.add(6).add('小明').add('zhangsan');
+        console.log(s);//Set(3) {6, "小明", "zhangsan"}
+
+        // Set中的方法：
+        // 由于 Set 结构没有键名，只有键值（或者说键名和键值是同一个值），所以keys方法和values方法的行为完全一致。
+        let se = new Set(['red','blue','yellow']);
+        // //通过使用for...of去遍历se，然后通过keys()可以获取对象中的每个value
+        for(let i of se.keys()){
+            console.log(i)
+        }
+        // red
+        // blue
+        // yellow
+
+        //通过使用for...of去遍历se，然后通过values()可以获取对象中的每个value
+        for(let i of se.values()){
+            console.log(i)
+        }
+        // red
+        // blue
+        // yellow
+
+        //通过使用for...of去遍历s，然后通过entries()可以获取对象中的键和值
+        for(let i of se.entries()){
+            console.log(i)
+        }
+        // (2) ["red", "red"]
+        // (2) ["blue", "blue"]
+        // (2) ["yellow", "yellow"]
+
+        // 注解：解释一下for…of :
+        // for…of 语句创建一个循环来迭代可迭代的对象。for…of 允许你遍历 Arrays（数组）, Strings（字符串）, Maps（映射）, Sets（集合）等可迭代的数据结构等。
+
+        // 注解：entries() 的用法
+        // entries() 方法返回一个数组的迭代对象，该对象包含数组的键值对 (key/value)。迭代对象中数组的索引值作为 key， 数组元素作为 value。
+        let arrEn = ['pink','orange','indigo '];
+        for(let item of arrEn.entries()){
+            console.log(item)
+        }
+        // (2) [0, "pink"]
+        // (2) [1, "orange"]
+        // (2) [2, "indigo "]
+
+        // 使用forEach()
+        // Set结构的实例的forEach方法，用于对每个成员执行某种操作，没有返回值。
+        let s1 = new Set([1,2,2,3,3,4,6]);
+        s1.forEach((x,y) => console.log(x * 2));
+        // 2
+        // 4
+        // 6
+        // 8
+        // 12
+
+        // 使用…扩展符可以把Set对象变成一个数组：
+        let s2 = new Set([1,2,3]);
+        console.log(s2);
+        // Set(3) {1, 2, 3}
+        let b = [...s2];
+        console.log(b);//[1, 2, 3]
+
+        let s3 = new Set(['red','blue','yellow']);
+        let array = [...s3];
+        console.log(array);//["red", "blue", "yellow"]
+
+        let d = [3,4,6,8,7,4,6,3];
+        let u = [...new Set(d)];
+        console.log(u);//[3, 4, 6, 8, 7]
+
+        // 也可以使用map和filter对Set对象进行处理：
+        // 注：使用map和filter进行处理之前记得使用…把Set对象变成一个数组，再进行一系列操作。
+        // 代码如下：
+        // 使用map
+        let f = new Set([4,3,6,8,1]);
+        console.log(f);//Set(5) {4, 3, 6, 8, 1}
+        // 使用map进行处理
+        let g = [...f].map(x => x*2);
+        console.log(g);//[8, 6, 12, 16, 2]
+        // 把数组变成Set类型
+        let j = new Set(g);
+        console.log(j);//Set(5) {8, 6, 12, 16, 2}
+
+        // 使用filter
+        let k = [...f].filter(x => (x % 2) == 0);
+        console.log(k);//[4, 6, 8]
+
+        // 使用 Set 可以很容易地实现并集（Union）、交集（Intersect）和差集（Difference）。
+        let l =new Set([1,3,3,4]);
+        let n =new Set([3,4,2,6]);
+        //获取并集
+        let union = new Set([...l,...n]);
+        console.log(union);//{1, 3, 4, 2, 6}
+        //获取交集
+        let intersect = new Set([...l].filter(x => n.has(x)));
+        console.log(intersect);//{3, 4}
+        // 获取差集
+        let diff = new Set([...l].filter(x => !n.has(x)));
+        console.log(diff);//{1}
+    </script> 
+</body>
+</html>

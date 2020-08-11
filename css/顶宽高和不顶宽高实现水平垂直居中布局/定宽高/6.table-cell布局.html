@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>table-cell布局</title>
+        <style>
+            .box{
+                width: 400px;
+                height: 400px;
+                margin: 0 auto;
+                background: #999999;
+                display: table-cell;
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            .children-box{
+                width: 200px;
+                height: 100px;
+                background: red;
+                /* 可以换成margin: auto; */
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div class="box">
+                <div class="children-box">
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

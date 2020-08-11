@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>绝对定位+负margin值</title>
+        <style>
+            .box{
+                width: 400px;
+                height: 400px;
+                margin: 0 auto;
+                background: #999999;
+                position: relative;
+            }
+
+            .children-box{
+                width: 200px;
+                height: 100px;
+                background: red;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                /* 子容器高的1/2的负值 */
+                margin-top: -50px;
+                /* 子容器宽的1/2的负值 */
+                margin-left: -100px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div class="box">
+                <div class="children-box">
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

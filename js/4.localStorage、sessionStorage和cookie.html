@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.localStorage、sessionStorage和cookie</title>
+</head>
+<body>
+    <script>
+        // >>>>>>>>>>localStorage与sessionStorage<<<<<<<<<<<<<
+        // (1)webstorage是本地存储，存储在客户端，包括localStorage和sessionStorage
+        // (2) localStorage 的生命周期是永久的，关闭页面或浏览器之后 localStorage 中的数据也不会消失。除非主动删除数据，
+        //    否则数据永远不会消失,存放数据大小为一般为5MB,而且它仅在客户端（即浏览器）中保存，不参与和服务器的通信。
+
+        // sessionStorage 的生命周期是仅在当前会话下有效。sessionStorage 引入了一个“浏览器窗口”的概念，
+        // sessionStorage 是在同源的窗口中始终存在的数据。只要这个浏览器窗口没有关闭，即使刷新页面或者进入同源另一个页面，
+        // 数据依然存在。但是 sessionStorage 在关闭了浏览器窗口后就会被销毁。同时独立的打开同一个窗口同一个页面，sessionStorage 也是不一样的。
+        // 存放数据大小为一般为5MB,而且它仅在客户端（即浏览器）中保存，不参与和服务器的通信。源生接口可以接受，亦可再次封装来对Object和Array有更好的支持
+
+        // (3)作用域的不同：
+        // 不同浏览器无法共享localStorage或sessionStorage中的信息。
+        // 相同浏览器的不同页面间可以共享相同的 localStorage（页面属于相同域名和端口），但是不同页面或标签页间无法共享sessionStorage的信息。
+        // 这里需要注意的是，页面及标签页仅指顶级窗口，如果一个标签页包含多个iframe标签且他们属于同源页面，那么他们之间是可以共享sessionStorage的
+
+        // (4)存储大小：localStorage和sessionStorage的存储数据大小一般都是：5MB
+
+        // (5)存储位置：localStorage和sessionStorage都保存在客户端，不与服务器进行交互通信
+
+        // (6)存储内容类型：localStorage和sessionStorage只能存储字符串类型，对于复杂的对象可以使用ECMAScript提供的JSON对象的stringify和parse来处理
+
+        // (7)获取方式：localStorage：window.localStorage;；sessionStorage：window.sessionStorage;
+
+        // (8)应用场景：localStoragese：常用于长期登录（+判断用户是否已登录），适合长期保存在本地的数据，而sessionStorage：敏感账号一次性登录
+
+        // (9)用法:
+        // 1)首先要判断浏览器是否支持 localStorage / sessionStorage，比如判断 localStorage
+            if (window.localStorage) {
+                console.log('浏览支持 localStorage');
+            } else {
+                console.log('浏览暂不支持 localStorage');
+            }
+        // 2)localStorage 和 sessionStorage 都具有相同的操作方法，例如 setItem()、getItem() 和 removeItem() 等
+            //  储存数据：
+            //  用途: 将 value 存储到 key 字段
+            //  用法: setItem( key, value)
+            //  代码示例
+            sessionStorage.setItem('key', 'value');
+            localStorage.setItem('key', 'value');
+            // 注意：如果需要储存数组或对象的话, 可以用JSON格式传入
+            
+            // 取出数据
+            // 用途: 获取指定 key 本地存储的值
+            // 用法: getItem(key)
+            // 代码示例
+            sessionStorage.getItem('key');
+            localStorage.getItem('key');
+
+            // 修改数据
+            // 用途: 修改指定 key 本地存储的值
+            // 用法: setItem(key)
+            // 代码示例
+            sessionStorage.setItem('key', 'newVal');
+            localStorage.setItem('key', 'newVal');
+
+            // 删除数据
+            // 用途: 删除指定 key 本地存储的值
+            // 用法: removeItem(key)
+            // 代码示例
+            sessionStorage.removeItem('key');
+            localStorage.removeItem('key');
+
+            // 清除数据
+            // 用途: 清除所有本地存储的数据
+            // 用法: clear()
+            // 代码示例
+            sessionStorage.clear();
+            localStorage.clear();
+
+        // >>>>>>>>>>>>>>cookie<<<<<<<<<<<<<<
+        // (1)HTTP Cookie简称cookie,在HTTP请求发送Set-Cookie HTTP头作为响应的一部分。通过name=value的形式存储
+        // (2)cookie的构成：
+        // 名称：name(不区分大小写,但最好认为它是区分的)
+        // 值:value(通过URL编码:encodeURIComponent)
+        // 域
+        // 路径
+        // 失效时间:一般默认是浏览器关闭失效,可以自己设置失效时间
+        // 安全标志:设置安全标志后只有SSL连接的时候才发送到服务器
+        // (3)cookie的作用:主要用于保存登录信息
+        // (4)生命期为只在设置的cookie过期时间之前一直有效，即使窗口或浏览器关闭。 存放数据大小为4K左右 。有个数限制（各浏览器不同），
+        // 一般不能超过20个。与服务器端通信：每次都会携带在HTTP头中，如果使用cookie保存过多数据会带来性能问题。
+        // (5)cookie的优点：具有极高的扩展性和可用性
+        // 通过良好的编程，控制保存在cookie中的session对象的大小
+        // 通过加密和安全传输技术，减少cookie被破解的可能性
+        // 只有在cookie中存放不敏感的数据，即使被盗取也不会有很大的损失
+        // 控制cookie的生命期，使之不会永远有效。这样的话偷盗者很可能拿到的就 是一个过期的cookie
+        // (6)cookie的缺点：
+        // cookie的长度和数量的限制。每个domain最多只能有20条cookie，每个cookie长度不能超过4KB，否则会被截掉
+        // 安全性问题。如果cookie被人拦掉了，那个人就可以获取到所有session信息。加密的话也不起什么作用
+        // 有些状态不可能保存在客户端。例如，为了防止重复提交表单，我们需要在服务端保存一个计数器。若吧计数器保存在客户端，则起不到什么作用
+
+        // (7)用法：
+        // 储存数据
+        window.document.cookie = 'key=val';
+        // 取出数据
+        document.cookie;
+        // example:
+
+        // 设置 Cookie
+        // setCookie(key, val, days) {
+        //     let date = new Date(); // 获取时间
+        //     date.setTime(date.getTime() + 24 * 60 * 60 * 1000 * days);
+        //     // 字符串拼接 Cookie
+        //     window.document.cookie = `${key}=${val};path=/;expires=${date.toGMTString()};`;
+        // }
+
+        // 获取 Cookie
+        // getCookie() {
+        //     let cookie = document.cookie.split(';');
+        // }
+
+        // 清除Cookie
+        // clearCookie() {
+        //     this.setCookie('', '', -1);
+        // }
+
+ 
+
+    </script>
+</body>
+</html>

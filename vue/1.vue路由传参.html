@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 方案一：
+        getDescribe(id) {
+        // 直接调用$router.push 实现携带参数的跳转
+            this.$router.push({
+             path: `/describe/${id}`,
+            })
+        }
+        // 方案一，需要对应路由配置如下：
+        // {
+        //     path: '/describe/:id',
+        //     name: 'Describe',
+        //     component: Describe
+        // }
+        
+        // 很显然，需要在path中添加/:id来对应 $router.push 中path携带的参数。在子组件中可以使用来获取传递的参数值。
+        this.$route.params.id
+
+        // 方案二：
+        this.$router.push({
+          name: 'Describe',
+          params: {
+            id: id
+          }
+        })
+        // 对应路由配置: 这里可以添加:/id 也可以不添加，不添加数据会在url后面显示，不添加数据就不会显示
+        // {
+        //     path: '/describe',
+        //     name: 'Describe',
+        //     component: Describe
+        // }
+        
+        // 子组件中: 这样来获取参数
+        this.$route.params.id
+
+        // 方案三：
+        // 父组件：使用path来匹配路由，然后通过query来传递参数
+        // 这种情况下 query传递的参数会显示在url后面?id=？
+
+        // {
+        //     path: '/describe',
+        //     name: 'Describe',
+        //     component: Describe
+        // }
+
+        // 对应子组件: 这样来获取参数
+        this.$route.query.id
+
+        // 总结:传参跳转页面时，query不需要再路由上配参数就能在新的页面获取到参数，params也可以不用配，
+        // 但是params不在路由配参数的话，当用户刷新当前页面的时候，参数就会消失。
+
+        // 也就是说使用params不在路由配参数跳转，只有第一次进入页面参数有效，刷新页面参数就会消失。
+    </script>
+</body>
+</html>

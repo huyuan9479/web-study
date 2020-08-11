@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>require与import的区别与使用</title>
+</head>
+<body>
+    <script>
+        // 1.遵循规范
+        // require 是CommonJS规范引入方式。
+        // import是es6的一个语法标准，如果要兼容浏览器的话必须转化成es5的语法。
+
+        // 2.调用时间
+        // require是运行时调用，所以require理论上可以运用在代码的任何地方，
+        // require可以理解为一个全局方法，因为它是一个方法所以意味着可以在任何地方执行。
+        // import是编译时调用，所以必须放在文件开头。
+
+        // 3.本质
+        // require是赋值过程，其实require的结果就是对象、数字、字符串、函数等，再把require的结果赋值给某个变量。
+        // import是解构过程，但是目前所有的引擎都还没有实现import，我们在node中使用babel支持ES6，
+        // 也仅仅是将ES6转码为ES5再执行，import语法会被转码为require。
+
+        // 4.性能
+        // require的性能相对于import稍低，因为require是在运行时才引入模块并且还赋值给某个变量，
+        // 而import只需要依据import中的接口在编译时引入指定模块所以性能稍高。
+
+
+        // require与import的基本语法：
+        // tt.js
+        module.export = {
+            tt: function(){
+                console.log("这是一个函数，也就是一个对象")
+            }
+        }
+        // 解析：在tt.js中使module这个意思就是模块的意思，就是实现特定功能的一组方法，也就是只要
+        // 把不同的函数（以及记录状态的变量）简单地放在一起，就算是一个模块。用module.export中的export这个变量接收返回的函数名为tt的函数
+
+        // bb.js中
+        var obj = require('../tt.js')
+        obj.tt()  // "这是一个函数，也就是一个对象"
+        // 解析：在bb.js中获取到tt.js赋值给变量obj,然后调用该方法
+        // 本质上是将要导出的对象赋值给module这个的对象的export属性，在其他文件中通过require这个方法访问该属性
+
+
+        // import的基本语法：
+        // 导出的对象必须与模块中的值一一对应，就是导出的对象与整个模块进行解构赋值，
+        //tt.js中
+        export default{    //（这种方法是最常使用的方法,加入default关键字代表在import时可以使用任意变量名并且不需要花括号{}）
+            b: function(){
+                console.log("这是一个函数")
+        }
+        }
+        
+        // export function(){  //导出函数
+        
+        // }
+        
+        export {newF as aa ,bb,cc}  //  解构赋值语法(as关键字在这里表示将newF作为aa的数据接口暴露给外部，外部不能直接访问aa)
+        
+        //bb.js中
+        import  aa  from  '...'  //import常用语法（需要export中带有default关键字）可以任意指定import的名称
+        
+        // import {...} from '...'  // 基本方式，导入的对象需要与export对象进行解构赋值。
+        
+        // import aa as As from '...'  //使用as关键字，这里表示将aa代表Aa引入（当变量名称有冲突时可以使用这种方式解决冲突）
+        
+        // import {a as Aa,b,c};  //as关键字的其他使用方法
+
+        // require和import相互转换使用：
+
+        import list from './list';
+        //等价于
+        var list = require('./list');
+    </script>
+</body>
+</html>

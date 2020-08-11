@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数组合并</title>
+</head>
+<body>
+    <script>
+        // 方法一：concat()
+        var a = [1,2,3];
+        var b=[4,5]
+        a = a.concat(b);
+        console.log(a);
+        //此处输出为 [1, 2, 3 ,4 ,5]
+
+
+        // 方法二：apply()
+        // ES5 的写法
+        var arr1 = [0, 1, 2];
+        var arr2 = [3, 4, 5];
+        Array.prototype.push.apply(arr1, arr2);
+        console.log(arr1)//[0,1,2,3,4,5]
+
+
+        // 方法三：push()
+        // ES6 的写法
+        var arr1 = [0, 1, 2];
+        var arr2 = [3, 4, 5];
+        arr1.push(...arr2);
+        console.log(arr1)//[0,1,2,3,4,5]
+
+
+        // ES6 的写法
+        var arr1 = [0, 1, 2];
+        var arr2 = [3, 4, 5];
+        var arr3=[...arr1, ...arr2]
+        console.log(arr3)//[0,1,2,3,4,5]
+    </script>
+</body>
+</html>

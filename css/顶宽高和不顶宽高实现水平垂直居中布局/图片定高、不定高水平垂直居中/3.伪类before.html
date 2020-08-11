@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>图片::before垂直居中</title>
+        <style>
+            .box {
+                width: 100%;
+                height: 800px;
+                border: 1px solid red;
+                text-align: center;
+                font-size: 0;
+            }
+
+            .box::after {
+                content: '';
+                display: inline-block;
+                vertical-align: middle;
+                height: 100%;
+            }
+            img {
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div class="box">
+                <img src="http://img4.imgtn.bdimg.com/it/u=1412343298,2381787876&fm=26&gp=0.jpg" alt="">
+            </div>
+        </div>
+    </body>
+</html>

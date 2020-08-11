@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>map,some,every,filter区别</title>
+</head>
+<body>
+    <script>
+        // 1.map()：返回一个新的Array，每个元素为调用func的结果。
+        // 新数组的长度和原来的是一样的，他只不过是逐一对原来数据里的每个元素进行操作。
+        var numbers = [4, 9, 16, 25];
+        function myFunction() {
+            console.log(numbers.map(Math.sqrt));
+        }
+        myFunction();
+        //[2, 3, 4, 5]
+
+        // map() 方法会将数组中元素依次传入方法中，并将方法的返回结果组成新数组返回。
+        // 传入的function可以有自己的三个形参，currentValue, index,arr分别代表当前元素，元素索引，元素所属数组对象；其中currentValue是必须的。
+
+        // 注意：map不会改变原数组，map不会检查空数组
+
+        // 2.some()：用于检测数组中的元素是否满足指定条件（函数提供）
+        var ages = [3, 10, 18, 20];
+        function checkAdult1(age) {
+            return age >= 18;
+        }
+
+        function myFunction1() {
+            console.log(ages.some(checkAdult1));
+        }
+        myFunction1();
+        //true
+
+        // some方法会依次执行数组的每个元素；
+        // 如果有一个元素满足条件，则表达式返回true , 剩余的元素不会再执行检测
+        // 如果没有满足条件的元素，则返回false
+        // function形参和map一样
+        
+        // 注意：some不会改变原数组，some不会检查空数组
+
+        // 3.every()：用于检测数组所有元素是否都符合指定条件（通过函数提供）
+        var ages2 = [32, 33, 16, 40];
+        function checkAdult2(age) {
+            return age >= 18;
+        }
+
+        function myFunction2() {
+            console.log(ages2.every(checkAdult2));
+        }
+        myFunction2();
+        // false
+
+        // every和some正好相反：
+        // 如果数组中检测到有一个元素不满足，则整个表达式返回 false ，且剩余的元素不会再进行检测。
+        // 如果所有元素都满足条件，则返回 true。
+        // function形参同上
+
+        // 注意：some不会改变原数组，some不会检查空数组
+
+        // 4.filter()：创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素
+        var ages3 = [32, 33, 16, 40];
+
+        function checkAdult3(age) {
+            return age >= 18;
+        }
+
+        function myFunction3() {
+            console.log(ages3.filter(checkAdult3));
+        }
+        myFunction3();
+        // [32, 33, 40]
+
+        // filter会根据函数中的筛选条件将返回的结果组成一个新的数组并返回
+    </script>
+</body>
+</html>
