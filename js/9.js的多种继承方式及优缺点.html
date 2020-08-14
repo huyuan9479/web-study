@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>js的多种继承方式及优缺点</title>
+</head>
+<body>
+    <script>
+        // **1.原型链继承
+		function Parent() {
+			this.name = "Yasuo";
+		}
+		
+		Parent.prototype.getName = function() {
+			console.log(this.name)
+		}
+		
+		function Child() {
+			this.skills = 'QWER';
+		}
+		
+		// 重点来啦！！！
+		
+		// 我们将Child的prototype对象指向一个Parent的实例。
+		// 它相当于完全删除了prototype 对象原先的值，然后赋予一个新值
+		Child.prototype = new Parent();
+		console.log(Child.prototype.constructor == Parent);//true
+		
+		Child.prototype.constructor = Child;	
+		
+		var child1 = new Child();
+		console.log(`name:${child1.name},skills:${child1.skills}`)
+		// name:Yasuo,skills:QWER
+		child1.getName();
+		// Yasuo
+		
+		// 任何一个prototype对象都有一个constructor属性，指向它的构造函数。
+		// 如果没有"Child.prototype = new Parent();"这一行，Child.prototype.constructor是指向Child的；
+		// 加了这一行以后，Child.prototype.constructor指向Parent。
+		// 更重要的是，每一个实例也有一个constructor属性，默认调用prototype对象的constructor属性。
+		console.log(child1.constructor == Child.prototype.constructor); // true
+		// 因此，在运行"Child.prototype = new Parent();"这一行之后，child1.constructor也指向Parent！
+		
+		// 这显然会导致继承链的紊乱（child1明明是用构造函数Child生成的），
+		// 因此我们必须手动纠正，将Child.prototype对象的constructor值改为Child。
+		// 这就是Child.prototype.constructor = Child的意思。
+		
+		// %%%%原型链继承缺点：
+		// (1)每个实例对引用类型属性的修改都会被其他的实例共享
+		function Animal() {
+			this.names = ['cat','tigger'];
+		}
+		
+		function Species(){
+			
+		}
+		
+		// 重点
+		Species.prototype = new Animal();
+		Species.prototype.constructor = Species;
+		
+		var species1 = new Species();
+		species1.names.push('dog');
+		console.log(species1.names);//["cat", "tigger", "dog"]
+		
+		var species2 = new Species();
+		species2.names.push('pig');
+		console.log(species2.names);// ["cat", "tigger", "dog", "pig"]
+		
+		// (2)在创建Child实例的时候，无法向Parent传参。这样就会使Child实例没法自定义自己的属性（名字）
+		
+		// **2.借用构造函数（经典继承）
+		function Fruit() {
+			this.fruits = ['apple', 'mango'];
+		}
+		
+		function Fresh() {
+			Fruit.call(this)
+		}
+		
+		var fresh1 = new Fresh();
+		fresh1.fruits.push('lemon');
+		console.log(fresh1.fruits);//["apple", "mango", "lemon"]
+		
+		var fresh2 = new Fresh();
+		fresh2.fruits.push('banana');
+		console.log(fresh2.fruits);//["apple", "mango", "banana"]
+		
+		// %%%%优点:
+		// (1)解决了每个实例对引用类型属性的修改都会被其他的实例共享的问题
+		// (2)子类可以向父类传参
+		
+		function Product(name, price) {
+			this.name = name;
+			this.price = price;
+		}
+		
+		function Food(name, price) {
+			Product.call(this, name, price);
+		}
+		
+		function Toy(name, price) {
+			Product.call(this, name, price);
+		}
+		
+		var cheese = new Food('feta', 5);
+		console.log(cheese.name + ' is $' + cheese.price)
+		
+		var fun = new Toy('robot', 40);
+		console.log(fun.name + ' is $' + fun.price)
+		
+		// %%%%缺点:
+		// (1)无法复用父类的公共函数
+		// (2)每次子类构造实例都得执行一次父类函数
+		
+		// 3.**组合式继承(原型链继承和借用构造函数合并)
+		function Person (name) {
+		    this.name = name;
+		    this.colors = ['red', 'blue', 'green'];
+		}
+		
+		Person.prototype.getName = function () {
+		    console.log(this.name)
+		}
+		
+		function Student (name, age) {		
+		    Person.call(this, name);
+		    this.age = age;	
+		}
+		
+		Student.prototype = new Person();
+		Student.prototype.constructor = Student;
+		
+		var student1 = new Student('kevin', '18');
+		
+		student1.colors.push('black');
+		
+		console.log(student1.name); // kevin
+		console.log(student1.age); // 18
+		console.log(student1.colors); // ["red", "blue", "green", "black"]
+		
+		var student2 = new Student('daisy', '20');
+		
+		console.log(student2.name); // daisy
+		console.log(student2.age); // 20
+		console.log(student2.colors); // ["red", "blue", "green"]
+		
+		// %%%%优点:
+		// （1）解决了每个实例对引用类型属性的修改都会被其他的实例共享的问题
+		// （2）子类可以向父类传参
+		// （3）可实现父类方法复用
+		
+		// %%%%缺点:
+		// （1）需执行两次父类构造函数，第一次是Child.prototype = new Parent(),第二次是Parent.call(this, name)造成不必要的浪费
+		
+		// **4.原型式继承
+		// 复制传入的对象到创建对象的原型上，从而实现继承
+		function createObj(o) {
+		    function F(){}
+		    F.prototype = o;
+		    return new F();
+		}
+		var person = {
+		    name : 'arzh',
+		    body : ['foot','hand']
+		}
+		var person1 = createObj(person)
+		var person2 = createObj(person)
+		
+		console.log(person1) //arzh
+		person1.body.push('head')
+		console.log(person2) //[ 'foot', 'hand', 'head' ]
+		
+		// 缺点: 同原型链继承一样，每个实例对引用类型属性的修改都会被其他的实例共享
+		
+		// **5.寄生式继承
+		// 我们可以使用Object.create来代替上述createObj的实现，原理基本上是一样的。
+		// 寄生式继承其实就是在createObj的内部以某种形式来增强对象（这里的增强可以理解为添加对象的方法），最后返回增强之后的对象。
+		function createAnother(original){
+		    var clone = Object.create(original);    //通过调用函数创建一个新对象
+		    clone.sayHi = function(){               //以某种方式来增强这个对象
+		        console.log("Hi");
+		    };
+		    
+		    return clone;                        //返回这个对象
+		}
+		
+		var person = {
+		    name: "Bob",
+		    friends: ["Shelby", "Court", "Van"]
+		};
+		var anotherPerson = createAnother(person);
+		anotherPerson.sayHi();
+		// 通过createEnhanceObj就可以在创建对象的时候，把对象方法也通过此种方式继承。
+		// 缺点：跟借用构造函数模式一样，每次创建对象都会创建一遍方法。
+		
+		
+		// **6. 寄生组合式继承
+		// 不需要为了子类的原型而多new了一次父类的构造函数，
+		// 如Child.prototype = new Parent()  只需要复制父类原型的一个副本给子类原型即可
+		function inheritPrototype(Parent, Child){
+		  Child.prototype = Object.create(Parent.prototype) //创建父类原型的一个副本,把副本赋值给子类原型
+		  Child.prototype.constructor = Child;
+		}
+		
+		function Parent(name) {
+		    this.name = name
+		}
+		
+		Parent.prototype.getNmae = function () {
+		    console.log(this.name)
+		}
+		
+		function Child(color) {
+		    Parent.call(this, 'zhangsan')
+		    this.color = color
+		}
+		
+		inheritPrototype(Parent, Child)
+		
+		var child1 = new Child('red')
+		console.log(child1.name) // 'zhangsan'
+		
+		// 优点: 不必为了指定子类型的原型而调用父类型的构造函数
+		
+		// **7.ES6继承
+		// ES6支持通过类来实现继承，方法比较简单，代码如下
+		class Point {
+			constructor(x, y) {
+			    this.x = x;
+				this.y = y;
+			}
+			
+			numberToStr() {
+				return this.x + ' ' + this.y
+			}
+		}
+		
+		class ColorPoint extends Ponit {
+			constructor(x, y, color) {
+			    super(x, y)//调用父类的constructor(x, y)
+				this.color = color
+			}
+			
+			numberToStr() {
+				return this.color + ' ' + super.numberToStr()// 调用父类的toString()
+			}
+		}
+		
+		var colorPonit = new ColorPoint('1', '2', 'blue');
+		console.log(colorPoint.toString())  // red 12
+    </script>
+</body>
+</html>  
