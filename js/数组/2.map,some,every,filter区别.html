@@ -8,8 +8,19 @@
 </head>
 <body>
     <script>
+		// https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array
+		
+		let arr = [12,34,26,77,65,8];
         // 1.map()：返回一个新的Array，每个元素为调用func的结果。
         // 新数组的长度和原来的是一样的，他只不过是逐一对原来数据里的每个元素进行操作。
+		// 用法：
+		// var new_array = arr.map(function callback(currentValue, index, array) { ... }, thisArg)
+		// callback: 生成新数组元素的函数，使用三个参数:
+		// currentValue: callback 数组中正在处理的当前元素。
+		// index可选: callback 数组中正在处理的当前元素的索引。
+		// array可选: map 方法调用的数组。
+		// thisArg可选: 执行 callback 函数时值被用作this。
+		
         var numbers = [4, 9, 16, 25];
         function myFunction() {
             console.log(numbers.map(Math.sqrt));
@@ -23,6 +34,14 @@
         // 注意：map不会改变原数组，map不会检查空数组
 
         // 2.some()：用于检测数组中的元素是否满足指定条件（函数提供）
+		// 用法
+		// arr.some(callback(element, index, array), thisArg)
+		// callback:用来测试每个元素的函数，接受三个参数：
+		// element:数组中正在处理的元素。
+		// index:可选,数组中正在处理的元素的索引值。
+		// array:可选,some()被调用的数组。
+		// thisArg:可选,执行 callback 时使用的 this 值。
+		
         var ages = [3, 10, 18, 20];
         function checkAdult1(age) {
             return age >= 18;
@@ -33,15 +52,25 @@
         }
         myFunction1();
         //true
+		
+		function checkNum(arr, val) {
+		  return arr.some(function(arrVal) {
+		    return val === arrVal;
+		  });
+		}
+		
+		checkNum(arr, 10);   // false
+		checkNum(arr, 26); // true
 
         // some方法会依次执行数组的每个元素；
         // 如果有一个元素满足条件，则表达式返回true , 剩余的元素不会再执行检测
-        // 如果没有满足条件的元素，则返回false
+        // 如果没有满足条件的元素，则返回false,如果用一个空数组进行测试，在任何情况下它返回的都是false。
         // function形参和map一样
         
         // 注意：some不会改变原数组，some不会检查空数组
 
         // 3.every()：用于检测数组所有元素是否都符合指定条件（通过函数提供）
+		// 用法同some
         var ages2 = [32, 33, 16, 40];
         function checkAdult2(age) {
             return age >= 18;
@@ -61,6 +90,9 @@
         // 注意：some不会改变原数组，some不会检查空数组
 
         // 4.filter()：创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素
+		// 用法同some
+		
+		// 例子1：
         var ages3 = [32, 33, 16, 40];
 
         function checkAdult3(age) {
@@ -72,11 +104,26 @@
         }
         myFunction3();
         // [32, 33, 40]
+		
+		// 例子2
+		var fruits = ['apple', 'banana', 'grapes', 'mango', 'orange'];
+		
+		/**
+		 * Array filters items based on search criteria (query)
+		 */
+		function filterItems(query) {
+		  return fruits.filter(function(el) {
+		      return el.toLowerCase().indexOf(query.toLowerCase()) > -1;
+		  })
+		}
+		
+		console.log(filterItems('ap')); // ['apple', 'grapes']
+		console.log(filterItems('an')); // ['banana', 'mango', 'orange']
 
         // filter会根据函数中的筛选条件将返回的结果组成一个新的数组并返回
 		
-		// 5.reduce()
-		array.reduce(function(total, currentValue, currentIndex, arr), initialValue);
+		// 5.reduce():方法对数组中的每个元素执行一个由您提供的reducer函数(升序执行)，将其结果汇总为单个返回值。
+		// array.reduce(function(accumulator, currentValue, currentIndex, arr), initialValue)
 		/*
 		  total: 必需。初始值, 或者计算结束后的返回值。
 		  currentValue： 必需。当前元素。
@@ -85,7 +132,31 @@
 		  initialValue: 可选。传递给函数的初始值，相当于total的初始值。
 		*/
 		 
-		 
+		// 回调函数第一次执行时，accumulator 和currentValue的取值有两种情况：
+		// 如果调用reduce()时提供了initialValue，accumulator取值为initialValue，currentValue取数组中的第一个值；
+		// 如果没有提供 initialValue，那么accumulator取数组中的第一个值，currentValue取数组中的第二个值。
+		// 即，如果没有提供initialValue，reduce 会从索引1的地方开始执行 callback 方法，跳过第一个索引。
+		// 如果提供initialValue，从索引0开始。
+		
+		// 如果数组为空且没有提供initialValue，会抛出TypeError 。如果数组仅有一个元素（无论位置如何）并且没有提供initialValue， 
+		// 或者有提供initialValue但是数组为空，那么此唯一值将被返回并且callback不会被执行。
+		
+		
+		var sum = arr.reduce(function (accumulator, currentValue, currentIndex, arr) {
+			console.log(accumulator, currentValue, currentIndex, arr)
+			return accumulator + currentValue;
+		}, 0);
+		console.log(sum)//222
+		// accumulator  currentValue  currentIndex  arr
+		// 0 12 0 [12, 34, 26, 77, 65, 8]
+		// 12 34 1 [12, 34, 26, 77, 65, 8]
+		// 46 26 2 [12, 34, 26, 77, 65, 8]
+		// 72 77 3 [12, 34, 26, 77, 65, 8]
+		// 149 65 4 [12, 34, 26, 77, 65, 8]
+		// 214 8 5 [12, 34, 26, 77, 65, 8]
+		
+		// 写成箭头函数的形式：
+		var sum = arr.reduce((accumulator, currentValue, currentIndex, arr) => accumulator + currentValue, 0);
     </script>
 </body>
 </html>
