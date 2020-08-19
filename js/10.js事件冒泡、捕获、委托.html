@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>10.js事件冒泡、捕获、委托</title>
+	</head>
+	<body>
+		<div>
+			<button type="button">
+				<p>点击冒泡</p>
+			</button>
+		</div>
+		
+		<ul id="ul1">
+		    <li>111</li>
+		    <li>222</li>
+		    <li>333</li>
+		    <li>444</li>
+		</ul>
+	</body>
+	<script type="text/javascript">
+		
+		// 一、事件流
+		// HTML中与javascript交互是通过事件驱动来实现的，事件，就是文档或浏览器窗口发生的一些特定的交互瞬间。
+		// 可以使用监听器（或事件处理程序）来预定事件，以便事件发生时执行相应的代码。
+		// 事件流就是页面接受事件的顺序，事件发生后会在元素节点之间按照某种顺序传播
+		// IE的事件是冒泡事件流，而firefox的事件流是捕获事件流。 
+		
+		// "DOM2事件流"规定的事件流包括三个阶段：
+		// 事件捕获阶段 => 处于目标阶段 => 事件冒泡阶段。
+		
+		// 绑定事件方法addEventListener()接收三个参数：事件名称，事件处理函数和一个布尔值。
+		// 布尔值为true，则表示在捕获阶段调用事件处理程序；如果为false，则表示在冒泡阶段调用事件处理程序。
+		// addEventListener允许在同一个元素上添加多个事件处理程序。
+		
+		// 二、事件冒泡
+		// IE的事件流叫做事件冒泡，即事件从最具体的元素到不具体的元素。 
+		// 在 冒泡 中，内部元素的事件会先被触发，然后再触发外部元素。
+		// IE提出的事件流叫做事件冒泡，即事件开始时由最具体的元素接收，然后逐级向上传播到较为不具体的节点。
+		
+		var oP = document.querySelector('p');
+		var oB = document.querySelector('button');
+		var oD = document.querySelector('div');
+		var oBody = document.querySelector('body');
+		
+		oBody.addEventListener('click',function(){
+			console.log('body被点击了');
+		},false);
+		
+		oD.addEventListener('click',function(){
+			console.log('div标签被点击了');
+		},false);
+		
+		oB.addEventListener('click',function(){
+			console.log('button按钮被点击了');
+		},false);
+		
+		oP.addEventListener('click',function(){
+			console.log('p标签被点击了');
+		},false);
+		
+		// p标签被点击了
+		// button按钮被点击了
+		// div标签被点击了
+		// body被点击了
+		
+		// 它会从一个最具体的的元素接收，然后逐级向上传播， p=>button=>div=>body..........
+		// 事件冒泡可以形象地比喻为把一颗石头投入水中，泡泡会一直从水底冒出水面。
+		
+		// 三、事件捕获
+		// 网景公司提出的事件流叫事件捕获流。
+		// 事件捕获流的思想是不太具体的DOM节点应该更早接收到事件，而最具体的节点应该最后接收到事件
+		
+		oP.addEventListener('click',function(){
+			console.log('p标签被点击了');
+		},true);
+		
+		oB.addEventListener('click',function(){
+			console.log('button按钮被点击了');
+		},true);
+		
+		oD.addEventListener('click',function(){
+			console.log('div标签被点击了');
+		},true);
+		
+		oBody.addEventListener('click',function(){
+			console.log('body被点击了');
+		},true);
+		
+		// body被点击了
+		// div标签被点击了
+		// button按钮被点击了
+		// p标签被点击了
+		
+		// 四、事件委托（事件代理）
+		// 事件委托就是利用事件冒泡，只指定一个事件处理程序，就可以管理某一类型的所有事件
+		// 利用事件冒泡的特性，将本应该注册在子元素上的处理事件注册在父元素上，这样点击子元素时发现其本身没有相应事件就到父元素上寻找作出相应。
+		// 这样做的优势有：1.减少DOM操作，提高性能。2.随时可以添加子元素，添加的子元素会自动有相应的处理事件。
+		
+		// Event对象提供了一个属性叫target，可以返回事件的目标节点，我们成为事件源，
+		// 也就是说，target就可以表示为当前的事件操作的dom，但是不是真正操作dom，
+		// 当然，这个是有兼容性的，标准浏览器用ev.target，IE浏览器用event.srcElement，此时只是获取了当前节点的位置，并不知道是什么节点名称，这里我们用nodeName来获取具体是什么标签名，
+		window.onload = function(){
+		// 　　var oUl = document.getElementById("ul1");
+		// 　　oUl.onclick = function(ev){
+		// 　　　　var ev = ev || window.event;
+		// 　　　　var target = ev.target || ev.srcElement;
+		// 　　　　if(target.nodeName.toLowerCase() == 'li'){
+		// 　 　　　　　　 alert(123);
+		// 　　　　　　　  alert(target.innerHTML);
+		// 　　　　}
+		// 　　}
+		
+			var ul_dom = document.getElementsByTagName('ul');
+			ul_dom[0].addEventListener('click', function(ev){  
+			    console.log(ev.target.innerHTML)
+			})
+		}
+		
+		// 适合用事件委托的事件：click，mousedown，mouseup，keydown，keyup，keypress。
+		
+		// 五、阻止冒泡和取消默认事件（默认行为）
+		// 防止冒泡和捕获：
+		// w3c的方法是e.stopPropagation()，IE则是使用e.cancelBubble = true
+		// 取消默认事件：
+		// w3c的方法是e.preventDefault()，IE则是使用e.returnValue = false;
+		
+		// 当需要停止冒泡行为时，可以使用
+		function stopBubble(e) { 
+			//如果提供了事件对象，则这是一个非IE浏览器 
+			if ( e && e.stopPropagation ) {
+				//因此它支持W3C的stopPropagation()方法 
+				e.stopPropagation(); 
+			} else {
+				//否则，我们需要使用IE的方式来取消事件冒泡 
+				window.event.cancelBubble = true;
+			}
+		}
+		
+		// 当需要阻止默认行为时，可以使用
+		//阻止浏览器的默认行为 
+		function stopDefault(e) { 
+		    //阻止默认浏览器动作(W3C) 
+		    if ( e && e.preventDefault ) 
+		        e.preventDefault(); 
+		    //IE中阻止函数器默认动作的方式 
+		    else 
+		        window.event.returnValue = false; 
+		    return false; 
+		}
+	</script>
+</html>
