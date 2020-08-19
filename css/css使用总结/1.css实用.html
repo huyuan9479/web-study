@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>1.css实用</title>
+		<style type="text/css">
+			/* 1.css禁用鼠标事件 */
+			.disabled {
+			    pointer-events: none;
+			    cursor: default;
+			    opacity: 0.6;
+			}
+			
+			/* 2. css禁止用户选择*/
+			body{
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;css禁止用户选择
+			}
+			
+			/* 3.如何修改chrome记住密码后自动填充表单的黄色背景 */
+			input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+			    background-color: rgb(250, 255, 189); /* #FAFFBD; */
+			    background-image: none;
+			    color: rgb(0, 0, 0);
+			}
+			
+			/* 4. 让页面里的字体变清晰，变细用CSS怎么做？ */
+			-webkit-font-smoothing: antialiased;
+			
+			/* 5.让overflow:scroll平滑滚动？ */
+			-webkit-overflow-scrolling: touch;
+			
+			/* 6.手机上的多行省略 */
+			.overflow-hidden{
+			    display: box !important;
+			    display: -webkit-box !important;
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+			    -webkit-box-orient: vertical;
+			    -webkit-line-clamp: 4;/*第几行出现省略号*/
+			    /*text-align:justify;不能和溢出隐藏的代码一起写，会有bug*/
+			}
+			
+			/* 7.长时间按住页面闪退 */
+			.element {
+			    -webkit-touch-callout: none;
+			}
+			
+			/* 8.改变输入框内提示文字颜色 */
+			::-webkit-input-placeholder { /* WebKit browsers */
+			    color: #999; }
+			:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+			    color: #999; }
+			::-moz-placeholder { /* Mozilla Firefox 19+ */
+			    color: #999; }
+			:-ms-input-placeholder { /* Internet Explorer 10+ */
+			    color: #999; }
+			input:focus::-webkit-input-placeholder{ color:#999; }
+			
+			/* 9.消除transtration闪屏 */
+			.css {
+			    -webkit-transform-style: preserve-3d;
+			    -webkit-backface-visibility: hidden;
+			    -webkit-perspective: 1000;
+			}
+			
+			/* 10.解决IE下a标签点击有虚线边框的问题 */
+			a {
+				outline: none;
+			}
+			a:active{
+				star:expression(this.onFocus = this.blur());
+			}
+			
+			/* 11.背景图如何才能完美适配视口 */
+			body {
+			  background-image: url('https://images.unsplash.com/photo-1573480813647-552e9b7b5394?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2253&q=80');
+			  background-repeat: no-repeat;
+			  background-position: center;
+			  background-attachment: fixed;
+			  background-size: cover;
+			  -webkit-background-size: cover;
+			  -moz-background-size: cover;
+			  -o-background-size: cover;
+			}
+			
+			/* 12.如何创建一个三角形的背景图像 */
+			body {
+			  margin: 0;
+			  padding: 0;
+			}
+			
+			div {
+			  position: absolute;
+			  height: 100vh;
+			  width: 100vw;
+			}
+			
+			.day {
+			  background-image: url("https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2613&q=80");
+			  background-size: cover;
+			  background-repeat: no-repeat;
+			}
+			
+			.night {
+			  background-image: url("https://images.unsplash.com/photo-1493540447904-49763eecf55f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80");
+			  background-size: cover;
+			  background-repeat: no-repeat;
+			  clip-path: polygon(100vw 0, 0% 0vh, 100vw 100vh);
+			}
+			
+			/* 13.如何在背景图像上添加叠加渐变？ */
+			body {
+			  background-image: 
+			    linear-gradient(4deg, rgba(38,8,31,0.75) 30%, rgba(213,49,127,0.3) 45%, rgba(232,120,12,0.3) 100%),
+			    url("https://images.unsplash.com/photo-1503803548695-c2a7b4a5b875?ixlib=rb-1.2.1&auto=format&fit=crop&w=2250&q=80");
+			  background-size: cover;
+			  background-repeat: no-repeat;
+			  background-attachment: fixed;
+			  background-position: center
+			}
+			
+				
+			/* 14.如何将背景图像设置为文本颜色？ */
+			body {
+			  display: flex;
+			  align-items: center;
+			  justify-content: center;
+			  flex-direction: column;
+			  width: 100%;
+			  text-align: center;
+			  min-height: 100vh;
+			  font-size: 120px;
+			  font-family:Arial, Helvetica, sans-serif;
+			}
+			
+			h1 {
+			   background-image: url("https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2600&q=80");
+			  background-clip: text;
+			  -webkit-background-clip: text;
+			  color: transparent;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 12.如何创建一个三角形的背景图像 -->
+		<div class="day"></div>
+		<div class="night"></div>
+	</body>
+</html>

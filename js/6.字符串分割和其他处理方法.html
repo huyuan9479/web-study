@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字符串分割</title>
+</head>
+<body>
+    <script type="text/javascript">
+		
+    	//************* 一、关于字符串分割 ****************
+		
+		var str = "hello world!";//length = 12
+		
+		// ###################
+		// 1、slice(): 语法：slice（start，end(不包含end元素)）
+		// 关于这个方法，一定要搞懂四个关键点：
+		// （1）截取字符串时不包括下标为end的元素。
+		// （2）end是可选参数，没有时，默认从start到结束的所有字符串。
+		// （3）String.slice与Array.slice区别：字符串和数组都具有这个方法，它们的返回结果形式不一样，一个是一段字符串，一个是一段浅复制后的数组。
+		// （4）参数为负数时，将字符串的长度与对应的负数相加，结果作为参数。
+		
+		console.log(str.slice(4,9));//o wor
+		console.log(str.slice(9));//ld!
+		console.log(str.slice(-6));//world!  (字符串长度是12，（12-6=6），所以slice（-6）从下标为6的字母开始)
+		console.log(str.slice(3,-5))//lo w   (slice（3，12-5）就是从下标3截取到下标7的字符串，这里就是"lo w") 
+		
+		// ###################
+		// 2、substr(): 语法：substr（start，length）
+		// 关于这个方法，也需要搞懂几个关键点：
+		// （1）第二个参数是子串中的字符数，必须是数值。可以没有。
+		// （2）参数为负数时，只会将第一个参数与字符串长度相加后的结果作为第一个参数（第一个参数为负数）。
+		// （3）最重要一点来自官网说明，如下所示：ECMAScript没有对该方法进行标准化，因此反对使用它
+		// 由于substr() 的参数指定的是子串的开始位置和长度，因此它可以替代 substring() 和 slice() 来使用。
+		
+		console.log(str.substr(2,6));//llo wo (从下标为2的字母开始，截取6个长度的字符)
+		console.log(str.substr(3));//lo world! (从下标为3的字母开始到最后)
+		console.log(str.substr(-6,4));//worl  （substr(12-6,4)）
+		console.log(str.substr(-6));//world!
+		
+		// ###################
+		// 3、substring() : 语法：substring（start，end）
+		// 关于这个方法，同样需要搞懂几个关键点：
+		// （1）返回的字符串中不包括 end 处的字符。
+		// （2）参数为负数时，直接将负参数直接转成0。
+		// （3）如果参数 start 与 end 相等，那么该方法返回的就是一个空串（即长度为 0 的字符串）。
+		// （4）如果 start 比 end 大，那么该方法在提取子串之前会先交换这两个参数。
+		
+		// 这个方法的作用同样可以使用slice（）方法来替代。
+		
+		console.log(str.substring(3,7));//lo w
+		console.log(str.substring(7,3));//lo w  （这个（7，3）会默认变成（3，7）将小的当起始位置来处理。）
+		console.log(str.substring(-3));//hello world!
+		console.log(str.substring(3,-4));//hel  相当于(str.substring(0,3))
+		
+		// 总结：
+		// （1）都接收两个参数，slice和substring接收的是起始位置和结束位置(注意：不包括结束位置)，而substr接收的则是起始位置和所要返回的字符串长度。
+		// （2）需要注意substring是以两个参数中较小一个作为起始位置，较大的参数作为结束位置。
+		// （3）slice：将字符串的长度与对应的负数相加，结果作为参数。
+		// substr：只会将第一个参数与字符串长度相加后的结果作为第一个参数（第一个参数为负数）。
+		// substring：直接将负参数直接转成0。
+		
+		// ###################
+		// 4.split() 语法：split（separator，howmany）
+		// 这个方法作用就是将一个字符串分割成字符串数组。
+		// 需要记住两个地方：
+		// 1、separator可以是字符串或正则表达式。
+		// 2、howmany可选参数，表示返回数组的最大长度。
+		
+		var f = '|a|b|c|'.split(/\|/);
+		console.log(f);//["", "a", "b", "c", ""]
+		
+		var digits = '0123456789';
+		console.log(digits.split('',5));//["0", "1", "2", "3", "4"]
+		
+		// split方法把一个字符串string分割成片段创建一个字符串数组，
+		// 可选参数howmany可以限制被分割的片段的数量。
+		// separator参数可以是一个字符串或一个正则表达式。
+		
+		
+		// *************二、其它字符串处理方法*********************
+		
+		// ###################
+		// 5.charAt（pos）:返回指定位置（如上pos）的字符
+		// 如果pos小于0或者大于等于字符串的长度string.length，它会返回空字符串。
+		console.log(str.charAt(0));//h
+		console.log(str.charAt(8));//r
+		console.log(str.charAt(-3));//""
+		console.log(str.charAt(22));//""
+		
+		// charAt其实可以像下面这样实现：
+		// String.method('charAt',function(pos){
+		// 	return this.slice(pos, pos+1)
+		// })
+		
+		// ###################
+		// 6.charCodeAt（pos）:返回指定位置的字符的 Unicode 编码。这个返回值是 0 - 65535 之间的整数。
+		console.log(str.charCodeAt(6));//119
+		console.log('张三李四'.codePointAt(2));//26446
+		
+		// ###################
+		// 7.concat（string...）:用于连接两个或者多个字符串。
+		// 相较于数组Array.concat()。其实字符串到是用的不多，主要是之前使用加号（+）会更方便一些，新语法时一步优化字符串拼接的操作。
+		
+		var x = "zhang".concat("san","li","si");
+		console.log(x);//zhangsanlisi
+		
+		// ###################
+		// 8.indexOf（searchString，position）
+		// 在string内查找另一个字符串searchString。如果它被找到，就返回第1个匹配字符的位置，否则返回-1。
+		// 需要记住一点是：可选参数position可设置从string的某个指定的位置开始查找。
+		
+		console.log(str.indexOf('l'));//2
+		console.log(str.indexOf('z'));//-1
+		console.log(str.indexOf('l',4));//9
+		// 上面最后一个输出，设置position=4，让它从第4个位置开始查找，所以查到第二次出现l的位置是9 。
+		
+		// ###################
+		// 9.lastIndexOf（searchString，position）
+		// 与indexOf方法类似，只不过它是从该字符串的末尾开始查找而不是从开头。
+		// 查找的方向是反的，顺序是正的
+		console.log(str.lastIndexOf('l'));//9
+		console.log(str.lastIndexOf('z'));//-1
+		console.log(str.lastIndexOf('l',4));//3
+		
+		// ###################
+		// 10.localeCompare（that）
+		// 语法格式是：stringObject.localeCompare(target)
+		
+		// 用来比较两个字符串，返回比较结果数字。
+		// 如果stringObject 小于 target，则 localeCompare() 返回-1。
+		// 如果 stringObject 大于 target，则该方法返回1。
+		// 如果两个字符串相等，或根据本地排序规则没有区别，该方法返回 0。
+		
+		var bar = "上海市";
+		var foo = "上海市徐汇区";
+		console.log(bar.localeCompare(foo));//-1
+		console.log(foo.localeCompare(bar));//1
+		console.log(foo.localeCompare(foo));//0
+		
+		// ###################
+		// 11.JavaScript match()方法和正则表达式match()
+		// %%%%%（1）参数为普通字符串的使用方式，此时match方法的返回值是存放首次匹配内容的数组。如果没有找到匹配结果，返回null。
+		// str.match(searchvalue)：searchvalue：必需，规定方法要检索的字符串。
+		
+		console.log(str.match("l"));
+		// ["l", index: 2, input: "hello world!", groups: undefined]
+		
+		// 对上述代码运行结果分析如下：
+		// （1）.match方法在有匹配结果的时候返回值是一个数组。
+		// （2）.数组第一个元素是match方法首次匹配到的子字符串，"hello world!"虽然有多个"l"，但是返回的数组只存储首次匹配到的"l"，如果match方法的参数是全局匹配的正则，将会存储所有的匹配到的子字符串。
+		// （3）.index属性值返回首次匹配到子字符串的位置。
+		// （4）.input属性值是原字符串"hello world!"。
+		// （5）.groups属性当前并不被支持，暂时不做介绍。
+		
+		console.log(str.match('wor'));
+		// ["wor", index: 6, input: "hello world!", groups: undefined]
+		// 首次匹配到子字符的位置，以子字符串的首字符在原字符串位置为准。
+		// 字符串与数组类似，字符位置从0开始计算，也就是第一个字符的位置为0，第二个位置为1，以此类推。
+		
+		console.log(str.match("123"));//null
+		// 如果匹配不到任何内容，方法返回值为null。
+		
+		// %%%%%（2）正则表达式 match()
+		// match方法可在字符串内查找一个或多个与指定正则表达式匹配的子字符串。
+		// 方法的返回值是存放着匹配结果的数组，但数组元素并不一定全都是匹配结果
+		// 语法结构：stringObject.match([string] | [RegExp])
+		// 参数解析：
+		// （1）stringObject：从中查找子字符串的源字符串。
+		// （2）reg：正则表达式对象或者正则表达式直接量。
+		
+		// 1）不使用全局匹配　
+		var test = 'Today is the 186th day of 2018,I must finish these 2 projects within 21 days.';
+		var results = test.match(/\d+/); //只能匹配字符串中出现的首个数字，未使用全局匹配符g
+		console.log(results);
+		
+		// ["186", index: 13, input: "Today is the 186th day of 2018,I must finish these 2 projects within 21 days.", groups: undefined]
+		// 0: "186"
+		// groups: undefined
+		// index: 13
+		// input: "Today is the 186th day of 2018,I must finish these 2 projects within 21 days."
+		// length: 1
+		// __proto__: Array(0)
+		
+		// 再强调一次，这个例子的结果是没有使用全局匹配的正则表达式的匹配结果。
+		// 说白了，就是正则表达式的末尾没跟g。由于不适用全局匹配，
+		// 所以match()方法只找到源字符串中首次匹配的子串后，就立刻得到返回结果，不再比较之后剩余的部分是否还有能匹配上的内容。　
+		
+		// 我们可以看到，match()的结果是一个数组，该数组一共有5项。各项代表的意思如下：	
+		// 第0项：匹配到字符串	
+		// 第1项：groups：undefined，这表示当前的正则表达式没使用分组	
+		// 第2项：index表示首次匹配上的子串的起始下标。	
+		// 第3项：input，表示源字符串	
+		// 第4项：length，表示匹配到的结果个数，由于这里不使用全局匹配，只找到首次匹配项就结束了，所以匹配结果只有1个，length也就是1。
+			
+		// 再次强调下，如果在正则表达式末尾不使用全局匹配符g，在本例中是无法匹配到所有的数字。
+		// 反过来说就是，如果想匹配所有的符合条件的子串，就必须在正则的末尾添加全局匹配符g
+		
+		// 2）使用全局匹配
+		var results2 = test.match(/\d+/g); //匹配所有的数字，使用了全局匹配符g
+		console.log(results2);
+		//  ["186", "2018", "2", "21"]
+		
+		// 这次我们在正则表达式的末尾添加了 g，该正则表达式的意图是，在字符串test中匹配出所有的由数字组成的子符串。
+		
+		// 3）使用分组,且不没有使用全局匹配g
+		var test1 = 'Today is the 286th day of 2018, the 108th Thanksgiving Day.';
+		var results3 = test1.match(/\d+(th)/); //匹配str中首个以数字开头，并且以th结尾的子串
+		console.log(results3);
+		// ["286th", "th", index: 13, input: "Today is the 286th day of 2018, the 108th Thanksgiving Day.", groups: undefined]
+		// 0: "286th"
+		// 1: "th"
+		// groups: undefined
+		// index: 13
+		// input: "Today is the 286th day of 2018, the 108th Thanksgiving Day."
+		// length: 2
+		// __proto__: Array(0)
+		
+		// 由于该正则表达式为： /\d (th) /，该表达式中使用了小括号（），在此处的作用为分组。
+		// 所以match()的结果是带有分组特征的。返回的数组包含多个元素，第一个元素是以贪婪模式找到的最长的匹配，
+		// 之后的元素依次为该匹配中的第一、第二、第三 ......个分组，这里只有1个分组，所以也就只匹配到1个分组结果，也就是”th"。
+		
+		// 假如正则表达式改成：/\d+(t)(h)/，那么匹配到的项就有3个，分别是 ： '286th' 、 't' 、'h'。
+		
+		// 4）使用分组，同时使用全局匹配g
+		var results4 = test1.match(/\d+(th)/g); //匹配str中所有的以数字开头，并且以th结尾的子串
+		console.log(results4);
+		//  ["286th", "108th"]
+		
+		// 这次的代码，跟上次的代码区别只有一点，就是正则表达式末尾多了个g，表示全局匹配。
+		// 当正则中使用全局匹配符g，即使有分组的存在，在匹配结果中也只有匹配到的最长的，那些分组的子匹配都不见了。
+		
+		// ###################
+		// 12.replace（searchValue，replaceValue）
+		// 作用：replace方法对string进行查找和替换操作，并返回一个新的字符串。
+		// 取值：而参数searchValue可以是一个字符串或者一个正则表达式对象。
+		
+		// （1）第一种情况：如果searchValue是一个字符串，那么searchValue只会在第1次出现 的地方被替换。
+		var rep = 'abcdefgabcd'.replace('ab','12');
+		console.log(rep);//12cdefgabcd
+		// 上面这例子就证明searchValue是一个字符串时，只会在第1次出现的地方被替换。
+		
+		// （2）第二种情况：如果searchValue是一个正则表达式并且带有g标识，它会替换所有的匹配。
+		// 如果没有带g标识，它会仅替换第1个匹配。
+		
+		var name = "aaa bbb ccc";
+		var n1 = name.replace(/\b\w+\b/, word => {
+			return word.substring(0,1).toUpperCase() + word.substring(1)
+		})
+		console.log(n1);//Aaa bbb ccc
+		
+		var n2 = name.replace(/\b\w+\b/g, word => {
+			return word.substring(0,1).toUpperCase() + word.substring(1)
+		})
+		console.log(n2);//Aaa Bbb Ccc
+		
+		// 首先，定义了一个name具有三段字符的字符串。
+		// 其次，serchValue定义了一个正则表达式，其意义是：
+		// \b：匹配单词边界，准确的说是表达独立部分，可以是起始，结束，空格。
+		// \w+：表示多个字符组合( 字母 ，数字，下划线_ )。
+		// 最后，如果不加g的话，如上，只匹配第一串字符。加了之后所有的都匹配了。
+		
+		// （3）第三种情况：replaceValue可以是一个字符串或一个函数，如果replaceValue是一个字符串，字符$拥有特殊的含义。
+		var lis = '"a","b","c"';
+		var li = lis.replace(/"([^"]*)"/g , "'$1'");
+		console.log(li)  //'a','b','c'
+		// /[^"] / 和 /^["]/是不一样的，前者是排除的意思，后者是代表首位。
+		// $1就代表前面searchValue正则所匹配的每一项内容。
+		
+		// $number-表示分组捕获的文本，即与regexp中的第number个子表达式相匹配的文本，后面这一句话比较是关键。
+		
+		var date = '2018-8-19';
+		var reg = /(\d+)(-)/g;
+		var d = date.replace(reg,function($0,$1,$2){
+			// console.log($0,$1,$2);
+			// $0      $1     $2
+			// 2018-   2018   -
+			// 8-      8      -
+			
+			return $1+'.';
+		})
+		console.log(d);//2018.8.19
+		
+		// $0：匹配成功后的整体结果（2018-，8-）。
+		// $1：匹配成功后的第一个分组，这个例子中指的是\d（2018，8）。
+		// $2：匹配成功后的第二个分组，这个例子中指的是-（- -）。
+		
+		// ###################
+		// 13.search（regexp）
+		// search方法其实和indexOf方法有点类似。
+		// 它只接受一个正则表达式对象作为参数而不是一个字符串。
+		// 如果找到匹配，它返回第1个匹配的音字符位置，如果没有找到匹配，则返回-1。
+		// 这个方法会忽略g标识，且没有position参数。
+		
+		var text = 'hello world! Html';
+		var t = text.search(/!/);
+		console.log(t);//11
+		
+		// ###################
+		// 14.大小写转换
+		// ECMAScript中涉及到字符串大小写转换的方法总共有4个。
+		// （1）toLowerCase()
+		// （2）toLocaleLowerCase()
+		// （3）toUpperCase()
+		// （4）toLocaleUpperCase()
+		
+		console.log(text.toLowerCase());//hello world! html
+		console.log(text.toLocaleLowerCase());//hello world! html
+		console.log(text.toUpperCase());//HELLO WORLD! HTML
+		console.log(text.toLocaleUpperCase());//HELLO WORLD! HTML
+		
+		// ###################
+		// 15.fromCharCode（char...）
+		// 可接受一个指定的Unicode值，然后返回一个字符串。
+		var chatCode = String.fromCharCode(36,99,69);
+		console.log(chatCode);//$cE
+		
+		// ###################
+		// 16.includes() 方法用于判断一个字符串是否包含在另一个字符串中，根据情况返回 true 或 false
+		// str.includes(searchString, position)
+		// searchString:要在此字符串中搜索的字符串。
+		// position:从当前字符串的哪个索引位置开始搜寻子字符串，默认值为 0。
+		
+		// includes() 方法是区分大小写的
+		
+		var str16 = 'To be, or not to be, that is the question.';
+		
+		console.log(str16.includes('To be'));       // true
+		console.log(str16.includes('question'));    // true
+		console.log(str16.includes('nonexistent')); // false
+		console.log(str16.includes('To be', 1));    // false
+		console.log(str16.includes('TO BE'));       // false
+		
+		// ###################
+		// 17.startsWith()方法用来判断当前字符串是否以另外一个给定的子字符串开头，并根据判断结果返回 true 或 false
+		// str.startsWith(searchString[, position])
+		// searchString 要搜索的子字符串。
+		// position 可选，在 str 中搜索 searchString 的开始位置，默认值为 0。
+		
+		console.log('startsWith----------------')
+		console.log(str16.startsWith("To be"));         // true
+		console.log(str16.startsWith("not to be"));     // false
+		console.log(str16.startsWith("not to be", 10)); // true
+		
+		// ###################
+		// 18.endsWith()方法用来判断当前字符串是否是以另外一个给定的子字符串“结尾”的，根据判断结果返回 true 或 false。
+		// str.endsWith(searchString[, length])
+		// searchString 要搜索的子字符串。
+		// length 可选，作为 str 的长度。默认值为 str.length。
+		
+		console.log('endsWith----------------')
+		console.log( str16.endsWith("question.") );  // true
+		console.log( str16.endsWith("to be") );      // false
+		console.log( str16.endsWith("to be", 19) );  // true
+    </script>
+</body>
+</html>

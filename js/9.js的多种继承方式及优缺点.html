@@ -201,8 +201,8 @@
 		// 不需要为了子类的原型而多new了一次父类的构造函数，
 		// 如Child.prototype = new Parent()  只需要复制父类原型的一个副本给子类原型即可
 		function inheritPrototype(Parent, Child){
-		  Child.prototype = Object.create(Parent.prototype) //创建父类原型的一个副本,把副本赋值给子类原型
-		  Child.prototype.constructor = Child;
+			Child.prototype = Object.create(Parent.prototype) //创建父类原型的一个副本,把副本赋值给子类原型
+			Child.prototype.constructor = Child;
 		}
 		
 		function Parent(name) {
@@ -234,7 +234,7 @@
 			}
 			
 			numberToStr() {
-				return this.x + ' ' + this.y
+				return this.x + '' + this.y
 			}
 		}
 		
@@ -250,7 +250,7 @@
 		}
 		
 		var colorPonit = new ColorPoint('1', '2', 'blue');
-		console.log(colorPoint.toString())  // red 12
+		console.log(colorPoint.toString())  // blue 12
     </script>
 </body>
 </html>  
