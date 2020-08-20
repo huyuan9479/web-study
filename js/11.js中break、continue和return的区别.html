@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>11.js中的break、continue和return的区别</title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			
+			// 一、break语句
+			// break 语句能够结束当前 for、for/in、while、do/while 或者 switch语句的执行；
+			// 停止当前循环体，跳出循环来继续执行后面的代码。
+			// break 也可以接受一个可选的标签名(break label;)，来决定跳出的结构语句，
+			// 如果没有设置标签名，则表示跳出当前最内层结构。
+			
+			function fn(){
+				for(var i=0;i<6;i++){
+					if(i == 3){
+						break;
+					}
+					console.log(i);
+				}
+				console.log('我是for循环后面的');
+			}
+			fn();
+			
+			// 0
+			// 1
+			// 2
+			// 我是for循环后面的
+			
+			// 接受一个可选的标签名
+			
+			let obj = {name:'张三',age:18,sex:'男',role:'programmer'};
+			outloop : for (i in obj) {
+			    switch (i) {
+			        case "age" :
+						console.log(obj[i])
+			            break outloop;
+			        default : 
+			            document.write("没有找到<br />");
+			    }
+			}
+			// break 语句和 label 语句配合使用仅限于嵌套的循环结构，或者嵌套的 switch 结构，且需要退出非当前层结构，
+			// break 与标签名之间不能包含换行符。
+			
+			// 二、continue语句
+			// continue 语句用在循环结构内，用于跳过本次循环中剩余的代码，并在表达式的值为真时，继续执行下一次循环。
+			// 它可以接受一个可选的标签名，开决定跳出的循环语句
+			
+			// continue 语句只能用在 while、do/while、for、for/in 语句中，对于不同的循环结构其执行顺序略有不同。
+			// 对于 for 语句来说将会返回顶部计算第 3 个表达式，然后再计算第 2 个表达式，如果第 2 个表达式为 true，则继续执行下一次循环。
+			// 对于 for/in 语句来说，将会以下一个赋给变量的属性名开始，继续执行下一次循环。
+			// 对于 while 语句来说，将会返回顶部计算表达式，如果表达式为 true，则继续执行下一次循环。
+			// 对于 do/while 语句来说，会跳转到底部计算表达式，如果表达式为 true，则会返回顶部开始下一次循环。
+			
+			function fn1(){
+				for(var i=0;i<6;i++){
+					if(i == 3){
+						continue;
+					}
+					console.log(i);
+				}
+				console.log('我是for循环后面的')
+			}
+			fn1();
+			// 0
+			// 1
+			// 2
+			// 4
+			// 5
+			// 我是for循环后面的
+			
+			var a = [1,"hi",2,"good","4", ,"",3,4],  //定义并初始化数组a
+			    b = [], j = 0;  //定义数组b和变量j
+			for (var i in a) {  //遍历数组a
+			    if (typeof a[i] == "string")  //如果为字符串，则返回继续下一次循环
+			        continue;
+			    b[j ++] = a[i];  //把数字寄存到数组b
+			}
+			document.write(b);  //返回1,2,3,4
+			
+			// 三、return语句
+			// return语句终止函数的执行，并返回一个指定的值给函数调用者，如果忽略，则返回 undefined。
+			
+			function fn2(){
+				for(var i=0;i<6;i++){
+					if(i == 3){
+						return;
+					}
+					console.log(i);
+				}
+				console.log('我是for循环后面的')
+			}
+			fn2();
+			
+			// 0
+			// 1
+			// 2
+			// return停止了这个for循环，跳出循环并且停止执行fn函数里后边的语句
+			
+			// retrun true； 返回正确的处理结果。
+			// return false；返回错误的处理结果以及阻止代码继续向下执行。
+			// return；把控制权返回给页面。
+			// return ; return false; return true 都会在函数内部阻止程序的执行。
+			// 只有 return false 会阻止表单的提交。
+		</script>
+	</body>
+</html>

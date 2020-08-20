@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>8.js的变量提升</title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			// 引擎会在解释JavaScript代码之前首先对齐进行编译，编译过程中的一部分工作就是找到所有的声明，
+			// 并用合适的作用域将他们关联起来，这也正是词法作用域的核心内容。
+			
+			// 在js代码执行前引擎会先进行预编译，预编译期间会将变量声明与函数声明提升至其对应作用域的最顶端
+			
+			console.log(a);
+			var a = 3;
+			
+			//预编译后的代码结构可以看做如下
+			var a; // 将变量a的声明提升至最顶端，赋值逻辑不提升。
+			console.log(a); // undefined
+			a = 3; // 代码执行到原位置即执行原赋值逻辑
+			
+			// 1、所有申明都会被提升到作用域的最顶上；
+			// 2、同一个变量申明只进行一次，并且因此其他申明都会被忽略；
+			// 3、函数声明的优先级优于变量申明，且函数声明会连带定义一起被提升。
+			
+			// 一、变量提升
+			// 变量声明的提升是以变量所处的第一层词法作用域为“单位”的，
+			// 即全局作用域中声明的变量会提升至全局最顶层，函数内声明的变量只会提升至该函数作用域最顶层。
+			
+			var x;
+			console.log(x); // undefined
+			x = "a";
+			var foo = () => {
+			    var x; // 全局变量会被局部作用域中的同名变量覆盖
+			    console.log(x); // undefined
+			    x = "a1";
+			}
+			foo(); 
+			console.log(x);// a
+			
+			
+			function add(){
+			    y = 10;
+			    var y = 1;
+			    console.log(y);
+			}
+			add(); //输出1
+			
+			
+			
+			// 二、函数提升
+			// 函数声明式
+			function bar() {
+			    console.log('function declaration');
+			}
+			
+			// 匿名函数表达式
+			var bar = function() {
+			    console.log('anonymous function expression');
+			};
+			
+			// 具名函数表达式
+			var bar = function bar() {
+			    console.log('named function expression');
+			};
+			
+			// 只有函数声明才存在函数提升，即函数提升只会提升函数声明，而不会提升函数表达式。
+			
+			console.log(foo1); // [Function: foo1]
+			foo1(); // foo1
+			console.log(foo2); // undefined
+			foo2(); // TypeError: foo2 is not a function
+			function foo1 () {
+				console.log("foo1");
+			};
+			var foo2 = function () {
+				console.log("foo2");
+			};
+			
+			// 相当于
+			function foo1 () {
+				console.log("foo1");
+			};
+			console.log(foo1); // [Function: foo1]
+			foo1(); // foo1
+			console.log(foo2); // undefined
+			foo2();
+			// 不提升
+			var foo2 = function () {
+				console.log("foo2");
+			};
+			
+			//再例如：
+			var a = 1;
+			function foo() {
+				a = 10;
+				console.log(a);
+				return;
+				function a() {};
+			}
+			foo();
+			console.log(a);
+			
+			// 代码块经过预编译后可以看做如下形式
+			var a = 1; // 定义一个全局变量 a
+			function foo() {
+			    // 首先提升函数声明function a () {}到函数作用域顶端， 
+				// 然后function a () {}等同于 var a =  function() {};最终形式如下
+			    var a = function () {}; // 定义局部变量 a 并赋值。
+			    a = 10; // 修改局部变量 a 的值，并不会影响全局变量 a
+			    console.log(a); // 打印局部变量 a 的值：10
+			    return;
+			}
+			foo();
+			console.log(a); // 打印全局变量 a 的值：1
+			
+			
+			// 三、同名变量和函数
+			// 同名变量和函数，函数会提升到最前边，变量其次
+			console.log('-----------同名变量和函数------------')
+			//简单的栗子
+			function a(){ 
+				console.log(a) 
+			}
+			console.log(a)
+			var a = 1
+			a()
+			
+			// 相当于
+			function a() {
+				console.log(a);
+			}
+			var a; // ####划重点：此处变量会被忽略
+			console.log(a);//打印函数本身
+			a = 1;
+			a()
+			
+			
+			// 四、同名变量
+			// 同名变量，声明会被提升，后边会忽略。
+			
+			console.log(a)
+			var a = 1
+			console.log(a)
+			var a = 2
+			console.log(a)
+			
+			//解析完顺序是这样的
+			var a;
+			var a; //忽略
+			console.log(a) // undfined
+			a = 1
+			console.log(a) //1
+			a = 2
+			console.log(a)//2
+			
+			// 五、同名函数
+			// 同名函数会被覆盖。
+			
+			function a(){console.log(1)}
+			console.log(a)
+			function a(){console.log(2)}
+			console.log(a)
+			a()
+			
+			//解析完
+			function a(){console.log(1)}
+			function a(){console.log(2)}
+			console.log(a)
+			console.log(a) // f a(){console.log(2)}
+			a()//2
+		</script>
+	</body>
+</html>
