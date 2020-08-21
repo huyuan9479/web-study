@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <script src="js/floor.js"></script>
+</head>
+<style type="text/css">
+    body{background: #F5F5F5;}
+    body,ul,li,dl,ol{margin: 0;padding: 0;list-style: none;}
+    i{font-style: normal;}
+    .fixedmeau{ border: 1px solid #ececec; width: 30px; position: fixed; top: 150px; left: 50px; display: none;background: #fff}
+    .fixedmeau li{ width: 30px; height: 30px;line-height: 30px; text-align: center; cursor: pointer;}
+    .fixedmeau li+li{border-top: 1px solid #ececec;}
+    .fixedmeau span{display: none;}
+    .fixedmeau .active{background: white; color: darkred;font-weight: 700}
+    .fixedmeau li:hover span{display: block; font-size: 12px; background: darkred; color: white;}
+    .fixedmeau li:hover i{display: none;}
+    .totop{width: 40px;height: 40px;text-align: center; background: darkred; position: fixed;bottom: 30px; right: 30px; cursor: pointer;border-radius: 5px; display: none;color:#fff;}
+    .totop>span{display: block;line-height: 15px;font-size: 12px;color:#fff;}
+    .header_box{width:100%;height: 160px; text-align: center; margin: 0 auto;}
+    .header_box>.header{line-height: 120px; font-size:64px;color:#4b4b4b;background: #fff;  }
+    .header_box>.meau{background: darkred;height:40px;line-height: 40px;color:#fff}
+    .louceng{ height: 800px;padding:0 15px 15px 15px;box-sizing:border-box; width: 1200px;text-align: center;margin: 0 auto;border:1px solid #ECECEC;background: #fff}
+    .louceng>.title{width:100%;height:50px;font-size: 18px;line-height: 50px;text-align: left;font-weight: 700;color: #333;}
+    .louceng>.title>span{margin-left: 5px;font-weight: normal}
+    .louceng>.con{width:100%;height:735px;background: #F1F1F1;font-size: 64px;line-height: 735px;color:#333333}
+</style>
+<body>
+<!--右侧固定导航-->
+<ul class="fixedmeau">
+    <li class="active"><i>1F</i><span>服饰</span></li>
+    <li><i>2F</i><span>美妆</span></li>
+    <li><i>3F</i><span>手机</span></li>
+    <li><i>4F</i><span>家电</span></li>
+    <li><i>5F</i><span>数码</span></li>
+    <li><i>6F</i><span>运动</span></li>
+    <li><i>7F</i><span>居家</span></li>
+    <li><i>8F</i><span>母婴</span></li>
+    <li><i>9F</i><span>食品</span></li>
+    <li><i>10F</i><span>图书</span></li>
+    <li><i>11F</i><span>服务</span></li>
+</ul>
+<!--返回顶部-->
+<div class="totop"><span>▲</span>Top</div>
+<!--头部-->
+<div class="header_box">
+    <div class="header">头部</div>
+    <div class="meau">菜单</div>
+</div>
+<!--模块-->
+<div class="louceng_box">
+    <div class="louceng">
+        <div class="title">1.服饰 <span>FUSHI</span></div>
+        <div class="con">服饰</div>
+    </div>
+    <div class="louceng">
+        <div class="title">2.美妆 <span>MEIZHUANG</span></div>
+        <div class="con">美妆</div>
+    </div>
+    <div class="louceng">
+        <div class="title">3.手机 <span>SHOUJI</span></div>
+        <div class="con">手机</div>
+    </div>
+    <div class="louceng">
+        <div class="title">4.家电 <span>JIADIAN</span></div>
+        <div class="con">家电</div>
+    </div>
+    <div class="louceng">
+        <div class="title">5.数码 <span>SHUMA</span></div>
+        <div class="con">数码</div>
+    </div>
+    <div class="louceng">
+        <div class="title">6.运动 <span>YUNDONG</span></div>
+        <div class="con">运动</div>
+    </div>
+    <div class="louceng">
+        <div class="title">7.居家 <span>JUJIA</span></div>
+        <div class="con">居家</div>
+    </div>
+    <div class="louceng">
+        <div class="title">8.母婴 <span>MUYIN</span></div>
+        <div class="con">母婴</div>
+    </div>
+    <div class="louceng">
+        <div class="title">9.食品 <span>SHIPIN</span></div>
+        <div class="con">食品</div>
+    </div>
+    <div class="louceng">
+        <div class="title">10.图书 <span>TUSHU</span></div>
+        <div class="con">图书</div>
+    </div>
+    <div class="louceng">
+        <div class="title">11.服务 <span>FUWU</span></div>
+        <div class="con">服务</div>
+    </div>
+</div>
+<script type="text/javascript">
+    /*
+     totop  //返回顶部按钮
+     fixedevery   // 左侧固定导航的每一项
+     louceng  //模块的每一项
+     header   //头部
+     */
+    $(function(){
+        var obj = new floor('.totop','.fixedmeau>li','.louceng_box>.louceng','.header_box');
+        obj.init()
+    })
+
+</script>
+
+</body>
+</html>
+
