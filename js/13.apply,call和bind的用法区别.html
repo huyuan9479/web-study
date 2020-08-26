@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>13.apply,call和bind的用法区别</title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			// 改变this指向有一下几种方法：
+			// （1）使用 ES6 的箭头函数
+			// （2）在函数内部使用 _this = this
+			// （3）使用 apply、call、bind
+			// （4）new 实例化一个对象
+			
+			var name = "windowsName";
+			var a = {
+				name: "Cherry",
+				func1: function() {
+					console.log(this.name)
+				},
+				
+				func2: function() {
+					setTimeout(function(){
+						this.func1()
+					},1000)
+				}
+			}
+			// a.func2();//this.func1 is not a function
+			// 在不使用箭头函数的情况下，是会报错的，因为最后调用 setTimeout 的对象是 window，但是在 window 中并没有 func1 函数。
+			
+			// ---------------一、箭头函数-------------
+			// ES6 的箭头函数是可以避免 ES5 中使用 this 的坑的。箭头函数的 this 始终指向函数定义时的 this，而非执行时。
+			// 箭头函数需要记着这句话：“箭头函数中没有 this 绑定，必须通过查找作用域链来决定其值，
+			// 如果箭头函数被非箭头函数包含，则 this 绑定的是最近一层非箭头函数的 this，否则，this 为 undefined”。
+			
+			var name = "windowsName";
+			var b = {
+				name: "Cherry",
+				fn1: function() {
+					console.log(this.name);
+				},
+				fn2: function() {
+					setTimeout(() => {
+						this.fn1();
+					},1000)
+				}
+			}
+			b.fn2();//Cherry
+			
+			// -----------二、在函数内部使用 _this = this--------------
+			// 如果不使用 ES6，那么这种方式应该是最简单的不会出错的方式了，
+			// 我们是先将调用这个函数的对象保存在变量 _this 中，然后在函数中都使用这个 _this，这样 _this 就不会改变了。
+			
+			var name = "windowsName";
+			var c = {
+				name: "Cherry",
+				fn1: function() {
+					console.log(this.name)
+				},
+				fn2: function() {
+					var _this = this;
+					setTimeout(function(){
+						_this.fn1();
+					},1000)
+				}
+			}
+			c.fn2();//Cherry
+			// 在 fn2 中，首先设置 var _this = this;，这里的 this 是调用 fn2 的对象 a，
+			// 为了防止在 fn2 中的 setTimeout 被 window 调用而导致的在 setTimeout 中的 this 为 window。
+			// 我们将 this(指向变量 a) 赋值给一个变量 _this，这样，在 fn2 中我们使用 _this 就是指向对象 a 了。
+			
+			
+			// -------------三、使用 apply、call、bind-----------------
+			// 1、call(thisArgs ,args1 ,args2, ...)
+			// 该方法可以传递一个thisArgs参数和一个参数列表，thisArgs 指定了函数在运行期的调用者，
+			// 也就是函数中的 this 对象，而参数列表会被传入调用函数中。
+			
+			// thisArgs 的取值有以下四种情况：
+			// （1）不传，或者传null,undefined， 函数中的 this 指向 window 对象
+			// （2）传递另一个函数的函数名，函数中的 this 指向这个函数的引用
+			// （3）传递字符串、数值或布尔类型等基础类型，函数中的 this 指向其对应的包装对象，如 String、Number、Boolean
+			// （4）传递一个对象，函数中的 this 指向这个对象
+			
+			// ###例如：
+			function x(){
+				console.log(this);//输入x中的this对象
+			}
+			function y(){}
+			var obj = {
+				name:"xiaoming"
+			}
+			
+			x.call();//Window
+			x.call(null);//Window
+			x.call(undefined);//Window
+			x.call(1);//Number 
+			x.call('');//String 
+			x.call(true);//Boolean 
+			x.call(y);//ƒ y(){}
+			x.call(obj);//{name: "xiaoming"}
+			
+			// ###例如
+			var xw = {
+				name: "亚索",
+				age: 10,
+				gender:'男',
+				skill: function(school, grade){
+					console.log(`姓名-${this.name}，今年-${this.age}岁，性别-${this.gender}，就读于${school}${grade}`)
+				}
+			}
+			
+			var xh = {
+				name: "诡术妖姬",
+				age: 16,
+				gender: "女"
+			}
+			xw.skill.call(xh, '实验中学', '五年级');
+			//姓名-诡术妖姬，今年-16岁，性别-女，就读于实验中学五年级
+			
+			
+			// ####### call()的应用场景：
+			// (1)判断变量类型
+			function isArray(obj){
+			    return Object.prototype.toString.call(obj) == '[object Array]';
+			}
+			isArray([]) // true
+			isArray('dot') // false
+			
+			// (2)将 arguments 等类数组转换为数组
+			// var trueArr = Array.prototype.slice.call(arguments,0,arguments.length)
+			
+			// (3)对象的继承
+			function superClass() {
+				this.a = 1;
+				this.print = function() {
+					console.log(a)
+				}
+			}
+			
+			function subClass() {
+				superClass.call(this);
+				this.print();
+			}
+			
+			subClass();//1
+			// subClass通过call方法，继承了superClass的a变量和print方法，此外，subClass还可以扩展自己的其他方法
+			
+			
+			// 2、apply(thisArgs, [argsArray])
+			// argsArray：一个数组或者类数组对象，其中的数组元素将作为单独的参数传给 fun 函数。
+			// 如果该参数的值为null 或 undefined，则表示不需要传入任何参数。
+			// apply只支持传入一个数组，哪怕是是一个参数也要是数组形式，最终调用函数时候这个数组会拆分成一个个参数分别传入
+			
+			// 使用上面的例子：
+			xw.skill.apply(xh, ['上海市第一高级中学', '六年级']);
+			//姓名-诡术妖姬，今年-16岁，性别-女，就读于上海市第一高级中学六年级
+			
+			var h ={
+				name : "Cherry",
+				fn : function (a,b) {
+					console.log( a + b)
+				}
+			}
+		
+			var j = h.fn;
+			j.apply(h,[1,2]);//3
+			
+			// 例如：
+			var name = "windowsName";
+			var d = {
+				name : "Cherry",
+				fun1: function() {
+					console.log(this.name)
+				},
+				fun2: function() {
+					setTimeout(function() {
+						this.fun1()
+					}.apply(d),1000);
+				}
+			}
+			d.fun2(); //Cherry
+			
+			
+			
+			// apply 和 call 的用法几乎一样，区别是第二个参数的传递方式不同，
+			// apply 的第二个参数必须是一个数组（或者类数组），而 call 允许传递一个参数列表，逗号分隔。
+			
+			// #### apply()的应用场景：
+			// (1)求数组中的最大和最小值
+			var arr = [0,8,3,46]
+			var max = Math.max.apply(null,arr);//46
+			var min = Math.min.apply(null,arr);//0
+			// 等价于
+			var max = window.Math.max(...arr);
+			var min = window.Math.min(...arr);
+			
+			// (2)使用 log 代替 console.log
+			function log(){
+			  console.log.apply(console, arguments);
+			}
+			
+			// (3)实现两个数组合并
+			let arr1 = [1,2,3];
+			let arr2 = [4,5,6];
+			Array.prototype.push.apply(arr1, arr2);
+			console.log(arr1)  //[1, 2, 3, 4, 5, 6]
+			
+			
+			// 3、bind(thisArgs, args1, args2, ...)
+			// bind的传参和call类似，但又和 call/apply 有着显著的不同，
+			// 即调用 call 或 apply 都会自动执行对应的函数，而 bind 不会执行对应的函数，只是返回了对函数的引用
+			// bind是返回一个新的函数，你需要再加一个小括号来调用
+			
+			xw.skill.bind(xh, '北大附中', '七年级')();
+			//姓名-诡术妖姬，今年-16岁，性别-女，就读于上海市第一高级中学六年级
+			
+			// 例如：
+			function add(a, b){
+				return a + b
+			}
+			function sub(a, b){
+				return a - b
+			}
+			add.bind(sub, 5, 3); //ƒ add(a, b){return a + b}
+			add.bind(sub, 5, 3)()  // 8
+			
+			
+			// ************ 相同点与不同点
+			// 相同点：三个函数都是为了改变被调用函数的this指向，都指向接受的第一个参数。
+			// 不同点：
+			// （1）apply和call都是直接调用函数，而bind则是先将函数暂存起来，需要再单独调用一次。
+			// （2）apply和call第一个参数一样，都是要绑定给 this 的值，如果这个值为null或者undefined，则为window对象。
+			// 他们的区别在第二个参数上：当函数需要传递多个变量时, apply可以接受一个数组作为参数输入, call 则是接受一系列的单独变量。
+			// 当参数个数已知的时候可以用call，而当参数个数不确定的时候可以用apply。
+			// （3）bind和call很相似，第一个参数是this的指向，从第二个参数开始是接收的参数列表。
+			// 区别在于bind方法返回值是函数以及bind接收的参数列表的使用。bind 方法不会立即执行，
+			// 而是返回一个改变了上下文 this后的函数。而不会影响原函数中的this指向。
+		</script>
+	</body>
+</html>

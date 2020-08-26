@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>12.js中this的理解</title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			// this的指向在函数定义时是确定不了的，只有函数执行的时候才能确定this到底指向谁，
+			// 在 ES5 中，其实 this 的指向，始终坚持一个原理：this 永远指向最后调用它的那个对象
+			
+			// 例1：
+			function a() {
+				var user = 'zhangsan';
+				console.log(this.user);//undefined
+				console.log(this);//Window 
+			}
+			a();
+			// 按照我们上面说的this最终指向的是调用它的对象，这里的函数a实际是被Window对象所点出来的，下面的代码就可以证明
+			
+			function a(){
+				var user = 'zhangsan';
+				console.log(this.user);//undefined
+				console.log(this);//Window 
+			}
+			window.a();
+			// 和上面代码一样吧，其实alert也是window的一个属性，也是window点出来的。
+			
+			// 例2：
+			var o = {
+				user: "lisi",
+				fn: function(){
+					console.log(this.user);//lisi
+				}
+			}
+			o.fn();
+			// 这里的this指向的是对象o，因为你调用这个fn是通过o.fn()执行的，那自然指向就是对象o，
+			// 这里再次强调一点，this的指向在函数创建的时候是决定不了的，在调用的时候才能决定，谁调用的就指向谁，一定要搞清楚这个。
+			
+			// 其实例子1和例子2说的并不够准确，看接下来的几个例子
+			var o = {
+				user: "wangwu",
+				fn: function(){
+					console.log(this.user);//wangwu
+				}
+			}
+			window.o.fn();
+			// 这段代码和上面的那段代码几乎是一样的，但是这里的this为什么不是指向window，如果按照上面的理论，
+			// 最终this指向的是调用它的对象，这里先说个题外话，window是js中的全局对象，
+			// 我们创建的变量实际上是给window添加属性，所以这里可以用window点o对象。
+			
+			// 再来看一段代码
+			var o = {
+				a: 10,
+				b: {
+					a: 12,
+					fn: function(){
+						console.log(this.a);//12
+					}
+				}
+			}
+			o.b.fn();
+			
+			// 这里同样也是对象o点出来的，但是同样this并没有执行它，那你肯定会说我一开始说的那些不就都是错误的吗？
+			// 其实也不是，只是一开始说的不准确，接下来我将补充一句话，我相信你就可以彻底的理解this的指向的问题。
+			
+			// 情况1：如果一个函数中有this，但是它没有被上一级的对象所调用，那么this指向的就是window，
+			// 这里需要说明的是在js的严格版中this指向的不是window，。
+　　 		// 情况2：如果一个函数中有this，这个函数有被上一级的对象所调用，那么this指向的就是上一级的对象。
+　　 		// 情况3：如果一个函数中有this，这个函数中包含多个对象，尽管这个函数是被最外层的对象所调用，this指向的也只是它上一级的对象，
+
+			var o = {
+			    a:10,
+			    b:{
+			        // a:12,
+			        fn:function(){
+			            console.log(this.a); //undefined
+			        }
+			    }
+			}
+			o.b.fn();
+			// 尽管对象b中没有属性a，这个this指向的也是对象b，因为this只会指向它的上一级对象，不管这个对象中有没有this要的东西。
+			
+			// 例4：
+			var y = {
+			    c:10,
+			    d:{
+			        c:12,
+			        fn:function(){
+			            console.log(this.c); //undefined构造函数版this
+			            console.log(this); //window
+			        }
+			    }
+			}
+			var j = y.d.fn;
+			j();
+			// 这里this指向的是window，this永远指向的是最后调用它的对象，也就是看它执行的时候是谁调用的。
+			// 例子4中虽然函数fn是被对象b所引用，但是在将fn赋值给变量j的时候并没有执行所以最终指向的是window，这和例子3是不一样的，例子3是直接执行了fn。
+			
+			// --------------构造函数版this----------------
+			function Fn(){
+			    this.user = "xiaoming";
+			}
+			var a = new Fn();
+			console.log(a.user); //xiaoming
+			// 这里之所以对象a可以点出函数Fn里面的user是因为new关键字可以改变this的指向，将这个this指向对象a(因为用了new关键字就是创建一个对象实例)，
+			// 这里用变量a创建了一个Fn的实例（相当于复制了一份Fn到对象a里面），此时仅仅只是创建，并没有执行，而调用这个函数Fn的是对象a，那么this指向的自然是对象a，
+			// 那么为什么对象a中会有user，因为你已经复制了一份Fn函数到对象a中，用了new关键字就等同于复制了一份。
+			
+			// -----当this碰到return时----------
+			// 例如：
+			function fn1()  
+			{  
+			    this.user = 'kangkang';  
+			    return {};  
+			}
+			var a = new fn1;  
+			console.log(a.user); //undefined
+			
+			// 再例如：
+			function fn2()  
+			{  
+			    this.user = 'jack';  
+			    return function(){};
+			}
+			var a = new fn2;  
+			console.log(a.user); //undefined
+			
+			// 再例如：
+			function fn3()  
+			{  
+			    this.user = 'mali';  
+			    return 1;
+			}
+			var a = new fn3;  
+			console.log(a.user); //lalala
+			
+			// 再例如：
+			function fn4()  
+			{  
+			    this.user = 'lalala';  
+			    return undefined;
+			}
+			var a = new fn4;  
+			console.log(a.user); //lalala
+			
+			// 如果返回值是一个对象，那么this指向的就是那个返回的对象，
+			// 如果返回值不是一个对象，那么this还是指向函数的实例。
+			
+			function fn5()  
+			{  
+			    this.user = '123';  
+			    return undefined;
+			}
+			var a = new fn5;  
+			console.log(a); //fn {user: "123"}
+			
+			
+			// 还有一点就是虽然null也是对象，但是在这里this还是指向那个函数的实例，因为null比较特殊。
+			function fn6()  
+			{  
+			    this.user = '123';  
+			    return null;
+			}
+			var a = new fn6;  
+			console.log(a.user); //123
+			
+			// 以下是this的默认指向:
+			// 1、定义在全局作用域中的普通函数中的this指向window对象
+			// 	作为函数调用
+			// 	作为内部函数调用
+			// 	setTimeout,setInterval
+			
+			// 2、事件处理函数中的this指向触发事件的标签元素
+			// DOM对象绑定事件
+			
+			// 3、构造函数中的this指向当前正在创建的对象（严格模式下必须使用new）
+			// 作为构造函数去调用，即new的时候，指向构造函数创建的那个实例
+			
+			// 4、对象方法中的this指向：在使用对象方法调用方式时，this被自然绑定到该对象
+		</script>
+	</body>
+</html>
