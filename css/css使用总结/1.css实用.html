@@ -183,11 +183,22 @@
 				-webkit-transform: scale(0.5);
 				transform: scale(0.5);
 			}
+			
+			/* 16.如何让英文小写转换为大写 */
+			h1{
+				/*文本中的每个单词以大写字母开头。*/
+				text-transform: capitalize;
+				/* 定义仅有大写字母 */
+				text-transform: uppercase;
+				/* 定义无大写字母，仅有小写字母 */
+				text-transform: lowercase;
+			}
 		</style>
 	</head>
 	<body>
 		<!-- 12.如何创建一个三角形的背景图像 -->
-		<div class="day"></div>
-		<div class="night"></div>
+		<!-- <div class="day"></div>
+		<div class="night"></div> -->
+		<h1>hello world!</h1>
 	</body>
 </html>

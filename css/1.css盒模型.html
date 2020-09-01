@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>1.css盒模型</title>
+	</head>
+	<body>
+		<!-- 盒模型是css布局的基石，它规定了网页元素如何显示以及元素间的相互关系。 -->
+		<!-- 盒子模型（Box Modle）可以用来对元素进行布局，包括内边距(padding)，边框(border)，外边距(margin)，和实际内容(content)这几个部分 -->
+		
+		<!-- 盒子模型分为两种 第一种是W3c标准的盒子模型（标准盒模型） 、第二种IE标准的盒子模型（怪异盒模型） -->
+		<!-- 
+			当前大部分的浏览器支持的是W3c的标准盒模型，也保留了对怪异盒模型的支持，当然IE浏览器沿用的是怪异盒模型。
+			怪异模式是“部分浏览器在支持W3C标准的同时还保留了原来的解析模式”，怪异模式主要表现在IE内核的浏览器。 
+		-->
+		
+		<!-- 1、标准盒模型中 -->
+		<!-- 标准盒模型下盒子的大小  = content + border + padding + margin，并且content部分不包含其他部分 -->
+		<!-- 图见：图片/css/盒模型/标准盒子模型 -->
+		
+		
+		
+		<!-- 2、怪异盒模型 -->
+		<!-- 怪异盒模型下盒子的大小 = width（content + border + padding） + margin，
+			 和w3c盒子模型不同的是，IE盒子模型的content部分包含了padding和border  -->
+		<!-- 图见：图片/css/盒模型/IE盒子模型 -->
+		
+		
+		
+		<!-- 我们还可以通过属性box-sizing来设置盒子模型的解析模式
+		可以为box-sizing赋三个值：
+		content-box： 默认值，border和padding不算到width范围内，可以理解为是W3c的标准模型(default)
+		border-box：border和padding划归到width范围内，可以理解为是IE的怪异盒模型
+		padding-box：将padding算入width范围 -->
+		
+		
+		<!-- 当设置为box-sizing:content-box时，将采用标准模式解析计算（默认模式）；
+		当设置为box-sizing:border-box时，将采用怪异模式解析计算； -->
+	</body>
+</html>

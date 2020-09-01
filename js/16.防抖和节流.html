@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>16.防抖和节流</title>
+		<style>
+		    .box {
+		      width: 200px;
+		      height: 200px;
+		      overflow: auto;
+		    }
+		</style>
+	</head>
+	<body>
+		<div class="box" id="container">
+		    <p>防抖演示</p>
+		    <p>防抖演示</p>
+		    <p>防抖演示</p>
+		    <p>防抖演示</p>
+		    <p>演示</p>
+		    <p>演示</p>
+		    <p>防抖演示</p>
+		    <p>防抖演示</p>
+		    <p>防抖演示</p>
+		</div>
+		<script type="text/javascript">
+			// 在开发中，我们常常会去监听滚动事件或者用户输入框验证事件，如果事件处理没有频率限制，就会加重浏览器的负担，影响用户的体验感，
+			// 因此，我们可以采取防抖（debounce）和节流（throttle）来处理，减少调用事件的频率，达到较好的用户体验。
+			
+			// 1、防抖（debounce）：防抖-debounce当持续触发事件时，一定时间内没有再触发事件，事件处理函数才会执行一次，
+			//                     若设定时间到来之前又一次触发事件，就重新开始延时。
+			
+			// 单位时间内事件触发会被重置，避免事件被触发多次。代码实现重在清零 clearTimeout
+			
+			// 应用:
+			// 1、seach搜索联想，用户在不断输入输入值时，用防抖来节约请求资源。
+			// 2、windows触发resize的时候，不断的调整浏览器窗口大小会不断的触发这个事件，用防抖来让其只触发这一次。
+			// 3、防止重复提交。
+			// 4、登录、发短信等按钮避免用户点击太快，以致于发送了多次请求，需要防抖。
+			
+			
+			const debounce = (fn, delay) => {
+			    let timer = null;
+			    return function(){
+					let	context = this,
+						args = arguments;
+					if(timer){
+						clearTimeout(timer);
+					}
+					timer = setTimeout(() => {
+						timer = null;
+						fn.apply(context, args);
+					}, delay);
+				}
+			}
+			
+			
+			// 防抖的应用：
+			
+			// 处理函数
+			  function handle() {
+			      console.log(Math.random());
+			  }
+			  var container = document.getElementById('container')
+			  container.addEventListener('scroll', debounce(handle, 1000));
+			
+			
+			// 2、节流（throttle）：
+			// 规定在一个单位时间内，只能触发一次函数。如果这个单位时间内触发多次函数，只有一次生效。
+			
+			// 应用：
+			// 1、鼠标不断点击触发，mousedown(单位时间内只触发一次)。
+			// 2、监听滚动事件，比如是否滑到底部自动加载更多，用throttle。
+			// 3、scroll 事件，每隔一秒计算一次位置信息等
+			// 4、浏览器播放事件，每个一秒计算一次进度信息等
+			// 5、input 框实时搜索并发送请求展示下拉列表，没隔一秒发送一次请求 (也可做防抖)
+
+			// 节流（定时器）
+			var throttle = function(func, delay) {            
+			    let timer = null;            
+			    return function() {                
+			        let context = this;               
+			        let args = arguments;                
+			        if (!timer) {                    
+			            timer = setTimeout(function() {                        
+			                func.apply(context, args);                        
+			                timer = null;                    
+			            }, delay);                
+			        }            
+			    }        
+			}  
+			
+			// 节流（时间戳）		  
+			var throttle = function(func, delay){
+				var prev = Date.now();
+				return function() {
+					var context = this,
+						args = arguments,
+						now = Date.now();
+					if(now - prev >= delay) {
+						func.apply(content, args);
+						prev = Date.now();
+					}
+				}
+			}
+			
+			
+			// 节流（定时器+时间戳）
+			var throttle = function(func, delay) {
+			    var timer = null; // 使用闭包，缓存变量
+			    var prev = Date.now(); // 最开始进入滚动的时间
+			    return function() {
+					var context = this;   // this指向window
+					var args = arguments;
+					var now = Date.now();
+					var remain = delay - (now - prev); // 剩余时间
+					clearTimeout(timer);
+					// 如果剩余时间小于0，就立刻执行
+					if (remain <= 0) {
+						func.apply(context, args);
+						prev = Date.now();
+					} else {
+						timer = setTimeout(func, remain);
+					}
+			    }
+			 }
+			
+			// // 节流应用：
+			function handle() {
+			    console.log(Math.random());
+			}
+			var container = document.getElementById('container')
+			container.addEventListener('scroll', throttle(handle, 1000));
+		</script>
+	</body>
+</html>

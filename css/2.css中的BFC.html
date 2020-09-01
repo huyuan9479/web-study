@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>CSS中的BFC</title>
+		<style type="text/css">
+			/* 4、BFC应用（1） */
+			.container1-1 {
+				overflow: hidden;
+				width: 100px;
+				height: 100px;
+				background-color: red;
+				margin-bottom: 50px;
+			}
+			
+			.container1-1 .box1 {
+				height: 20px;
+				margin: 10px 0;
+				background-color: green;
+			}
+			
+			.container1-1 .box2 {
+				height: 20px;
+				margin: 20px 0;
+				background-color: green;
+			}
+			/* ---------- */
+			.container1 {
+				overflow: hidden;
+				width: 100px;
+				height: 100px;
+				background-color: red;
+				margin-bottom: 50px;
+			}
+			
+			.container1 .wrapper {
+				overflow: hidden;
+			}
+			
+			.container1 .wrapper .box1 {
+				height: 20px;
+				margin: 10px 0;
+				background-color: green;
+			}
+			
+			.container1 .box2 {
+				height: 20px;
+				margin: 20px 0;
+				background-color: green;
+			}
+			
+			
+			/* 4、BFC应用（2）2）BFC内部，无论是浮动盒子还是普通盒子，其左总是与包含块的左边相接触（从右到左的的格式，否则为与右边框相接触） */
+			.container2 {
+				position: absolute;  /* 创建一个BFC环境*/
+				height: auto;
+				background-color: #eee;
+				height: 20px;
+			}
+			
+			.container2 .box1 {
+				width: 400px;
+				background-color: red;
+				height: 20px;
+			}
+			
+			.container2 .box2 {
+				width: 300px;
+				background-color: green;
+				height: 20px;
+			}
+			
+			.container2 .box3 {
+				width: 100px;
+				background-color: yellow;
+				float: left;
+				height: 20px;
+			}
+			
+			.container2 .box4 {
+				width: 200px;
+				height: 30px;
+				background-color: purple;
+				height: 20px;
+			}
+			
+			/* （3）BFC 区域不会与float box区域相叠加  */
+			.container3{
+				overflow: hidden;
+				margin: 200px 0;
+			}
+			.container3 .column:nth-of-type(1) {
+				float: left;
+				width: 200px;
+				height: 300px;
+				margin-right: 10px;
+				background-color: red;
+			}
+			
+			.container3 .column:nth-of-type(2) {
+				overflow: hidden;/*创建bfc */
+				height: 300px;
+				background-color: purple;
+			}
+			
+			
+			/* ------------------- */
+			.container4 .column:nth-of-type(1),
+			.container4 .column:nth-of-type(2) {
+				float: left;
+				width: 100px;
+				height: 300px;
+				background-color: green;
+			}
+			
+			.container4 .column:nth-of-type(2) {
+				float: right;
+			}
+			
+			.container4 .column:nth-of-type(3) {
+				overflow: hidden;  /*创建bfc*/
+				height: 300px;
+				background-color: red;
+			}
+			
+			/* 也可以用来防止字体环绕 */
+			/* 环绕 */
+			.container5 {
+				overflow: hidden;
+				width: 400px;
+				margin: 100px 0;
+			}
+			.container5 .left {
+				float: left;
+				width: 100px;
+				height: 100px;
+				background-color: yellow;
+			}
+			
+			.container5 p {
+				background-color: green;
+				margin: 0;
+				padding: 0;
+			}
+			
+			/* 利用bfc防止环绕 */
+			.container6 {
+				overflow: hidden;
+				width: 400px;
+			}
+			.container6 .left {
+				float: left;
+				width: 100px;
+				height: 100px;
+				background-color: yellow;
+			}
+			
+			.container6 p {
+				background-color: green;
+				overflow: hidden;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 1、什么是BFC -->
+		<!-- BFC（Block Formatting Context）格式化上下文，是web页面中盒模型布局的css渲染模式，
+		指一个独立的渲染区域或者说是一个隔离的独立容器。用于决定块盒子的布局及浮动相互影响范围的一个区域，
+		只有Block-level box参与，它规定了内部的Block-Level Box如何布局，并且与这个区域外部毫不相干 -->
+		
+		<!-- 2、BFC的特征 -->
+		<!-- 
+			（1）BFC内部，盒子由上至下按顺序进行排列，其间隙由盒子的外边距决定，并且，当同一
+				个BFC中的两个盒子同时具有相对方向的外边距时，其外边距还会发生叠加(Margin Collapse) 
+			（2）BFC内部，无论是浮动盒子还是普通盒子，其左总是与包含块的左边相接触（从右到左的的格式，否则为与右边框相接触）
+			（3）BFC 区域不会与float box区域相叠加 
+			（4）BFC内外布局不会相互影响
+			（5）计算BFC高度的时候，浮动元素的高度也计算在内
+		 -->
+		 
+		<!-- 3、形成BFC的条件 -->
+		<!-- 
+			（1）浮动元素，float 除 none 以外的值； 
+			（2）绝对定位元素，position（absolute，fixed）；
+			（3）display 为以下其中之一的值 inline-block，table-cell，table-caption、flex；
+			（4）overflow 除了 visible 以外的值（hidden，auto，scroll）；
+			（5）body 根元素；
+			（6）表格的元素（td | th | caption）。
+		 -->
+		 
+		 <!-- 4、BFC应用 -->
+		<!--（1）BFC内部，盒子由上至下按顺序进行排列，其间隙由盒子的外边距决定，并且，当同一
+				个BFC中的两个盒子同时具有相对方向的外边距时，其外边距还会发生叠加(Margin Collapse)  -->
+			 <div class="container1-1">
+				<div class="box1"></div>
+				<div class="box2"></div>
+			</div>
+			<!-- 第一个子盒子有上边距（不会发生margin穿透的问题）；两个子盒子的垂直距离为20px而不是30px，
+			因为垂直外边距会折叠，间距以较大的为准。 -->
+			
+			<!-- 使用BFC后 -->	
+			<div class="container1">
+				<div class="wrapper">
+					<div class="box1"></div>
+				</div>
+				<div class="box2"></div>
+			</div>
+			<!-- bfc就是页面上的一个独立容器，容器里面的子元素不会影响外面元素，
+			同样外面的元素不会影响到BFC内的元素。所以就让box1或box2再处于另一个BFC中就行了 -->
+				
+				
+		<!--（2）BFC内部，无论是浮动盒子还是普通盒子，其左总是与包含块的左边相接触（从右到左的的格式，否则为与右边框相接触） -->
+			<div class="container2">
+		        <div class="box1"></div>
+		        <div class="box2"></div>
+		        <div class="box3"></div>
+		        <div class="box4"></div>
+		    </div>
+			<!-- 浮动的元素也是这样，box3浮动，他依然接着上一个盒子垂直排列。并且所有的盒子都左对齐。 -->
+		
+			
+		<!-- （3）BFC 区域不会与float box区域相叠加  -->
+		
+		<!-- 左边固定宽度，右边不设宽，因此右边的宽度自适应，随浏览器窗口大小的变化而变化。 -->
+		<div class="container3">
+			<div class="column"></div>
+			<div class="column"></div>
+		</div>
+		
+		<!-- 还有三栏布局。
+			左右两边固定宽度，中间不设宽，因此中间的宽度自适应，随浏览器的大小变化而变化。 -->
+		<div class="container4">
+			<div class="column"></div>
+			<div class="column"></div>
+			<div class="column"></div>
+		</div>
+		
+		<!-- 也可以用来防止字体环绕 
+		浮动的盒子会遮盖下面的盒子，但是下面盒子里的文字是不会被遮盖的，文字反而还会环绕浮动的盒子。这也是一个比较有趣的特性。-->
+		
+		<!-- 环绕 -->
+		<div class="container5">
+			<div class="left"></div>
+			<p>你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好
+			   你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好
+			   你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好
+			</p>
+		</div>
+		
+		<!-- 利用bfc防止环绕 -->
+		<div class="container6">
+			<div class="left"></div>
+			<p>你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好
+			   你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好
+			   你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好
+			</p>
+		</div>
+		
+		
+		<!-- 4、BFC包含浮动的块 -->
+		<!-- BFC可以包含浮动的元素(清除浮动) -->
+		<div style="border: 1px solid #000;">
+		    <div style="width: 100px;height: 100px;background: #eee;float: left;"></div>
+		</div>
+		<!-- 由于容器内元素浮动脱离文档流，导致容器只剩下2px边距高度， -->
+		
+		<!-- 采用BFC后 -->
+		<div style="border: 1px solid #000;overflow: hidden;margin-top: 200px;">
+		    <div style="width: 100px;height: 100px;background: #eee;float: left;"></div>
+		</div>
+	</body>
+</html>
