@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>3.css常用的伪类</title>
+		<style type="text/css">
+			a:link{
+				color: #0000FF;
+				font-size: 14px;
+			}
+			
+			a:visited{
+				color: yellow;
+				font-size: 16px;
+			}
+			
+			a:hover{
+				color: red;
+				font-size: 18px;
+			}
+			
+			a:active{
+				color: #008000;
+				font-size: 20px;
+			}
+			
+			/* ------ */
+			.two{
+				width: 140px;
+			}
+			.two p::first-line{
+				color: #0000FF;
+			}
+			
+			.two p::first-letter{
+				font-size: 20px;
+				color: red;
+			}
+			
+			.two p::selection{
+				color: yellow;
+				background-color: #666666;
+			}
+			
+			/* ---------- */
+			.three div:last-of-type p:only-child{
+				color: #0000FF;
+				font-size: 22px;
+			}
+			
+			.three p:first-of-type{
+				color: red;
+				font-size: 18px;
+			}
+			
+			.three p:nth-last-of-type(4){
+				color: green;
+				font-weight: 600;
+			}
+			
+			/* ------- */
+			.four input:checked{
+				height: 30px;
+				width: 30px;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- a标签中有四个：link、visited、hover、active -->
+		<!--
+			(1):link 	设置a对象在未被访问前的样式表属性。 
+			
+			(2):visited   设置a对象在其链接地址已被访问过时的样式表属性。 
+			
+			(3):hover   设置对象在其鼠标悬停时的样式表属性
+			
+			(4):active   设置对象在被用户激活（在鼠标点击与释放之间发生的事件）时的样式表属性。
+		-->
+		<a href="https://www.baidu.com" target="_blank">百度一下</a>
+		
+		<!-- 
+			(5)::first-line   选择首行文本,定义文本的首行样式。
+			
+			(6)::first-letter   定义文本的第一个字符样式。
+			
+			(7)::selection   应用于任何被用户选中的高亮区域。
+		 -->
+		 
+		<div class="two">
+			<p>天街小雨润如酥，草色遥看近却无。最是一年春好处，绝胜烟柳满皇都。</p>
+		</div>
+		
+		<!-- 
+			(8):root 这个 CSS 伪类匹配文档树的根元素。对于 HTML 来说，:root 表示 <html> 元素，除了优先级更高之外，与 html 选择器相同。
+		 -->
+		 
+		<!-- 
+			(9):only-child   匹配父元素中没有任何兄弟元素的子元素。
+			
+			(10):first-of-type   选择第一个指定类型的子元素。
+			
+			(11):last-of-type   选择最后一个指定类型的子元素。
+			
+			(12):nth-last-of-type()   选择列表末尾中指定类型的子元素。
+			
+			(13):not()   对于选择取反（这是一个运算符）
+		 -->
+		
+		<div class="three">
+			<div>春江潮水连海平，海上明月共潮生。</div>
+			<div>滟滟随波千万里，何处春江无月明!</div>
+			<p>江流宛转绕芳甸，月照花林皆似霰；</p>
+			<p>空里流霜不觉飞，汀上白沙看不见。</p>
+			<p>江天一色无纤尘，皎皎空中孤月轮。</p>
+			<div>江畔何人初见月？江月何年初照人？</div>
+			<p>人生代代无穷已，江月年年望相似。</p>
+			<div>不知江月待何人，但见长江送流水。</div>
+			<p>白云一片去悠悠，青枫浦上不胜愁。</p>
+			<div>
+				<p>谁家今夜扁舟子？何处相思明月楼？</p>
+			</div>
+		</div>
+		
+		<!-- (14):checked   这个应用于已经被选中的复选框。 -->
+		
+		<div class="four">
+			<input type="checkbox" name="" id="" value="1" />疾风剑豪
+			<input type="checkbox" name="" id="" value="2" />熔岩巨兽
+			<input type="checkbox" name="" id="" value="3" />深渊巨口
+		</div>
+	</body>
+</html>

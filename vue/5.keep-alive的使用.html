@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>5.keep-alive的使用</title>
+	</head>
+	<body>
+		<!-- 
+			1.概念
+			keep-alive是vue的内置组件，当它包裹动态组件时，会缓存不活动的组件实例，而不是销毁它们。
+			和transition相似，keep-alive是一个抽象组件:它自身不会渲染成一个DOM元素，也不会出现在父组件链中。 
+		-->
+
+		<!-- 
+			2.作用
+			在组件切换过程中将状态保留在内存中，防止重复渲染DOM，减少加载时间及性能消耗，提高用户体验。
+			或不希望组件被重新渲染，而是希望组件可以缓存下来，维持当前的状态。 
+		-->
+
+		<!-- 
+			3.原理
+			在created函数调用时将需要缓存的VNode（虚拟DOM，其实就是一个JS对象）节点保存在 this.cache 中／在 render（页面渲染） 时，
+			如果 VNode（虚拟DOM，其实就是一个JS对象） 的 name 符合缓存条件（可以用 include 以及 exclude 控制），
+			则会从 this.cache 中取出之前缓存的 VNode（虚拟DOM，其实就是一个JS对象） 实例进行渲染。 
+		-->
+
+		<!-- 
+			4.Props
+			include - 字符串或正则表达式。只有名称匹配的组件会被缓存。
+			exclude - 字符串或正则表达式。任何名称匹配的组件都不会被缓存。
+			max - 数字。最多可以缓存多少组件实例。 
+		-->
+
+		<!-- 
+			5.生命周期函数
+			(1).activated
+			在 keep-alive 组件激活时调用，该钩子函数在服务器端渲染期间不被调用
+			(2).deactivated
+			在 keep-alive 组件停用时调用，该钩子在服务器端渲染期间不被调用 
+		-->
+
+		<!-- 被包含在 keep-alive 中创建的组件，会多出两个生命周期的钩子: activated 与 deactivated -->
+
+		<!-- 使用 keep-alive 会将数据保留在内存中，如果要在每次进入页面的时候获取最新的数据，
+		需要在 activated 阶段获取数据，承担原来 created 钩子函数中获取数据的任务。 -->
+
+		<!-- 
+			注意： 只有组件被 keep-alive 包裹时，这两个生命周期函数才会被调用，
+			如果作为正常组件使用，是不会被调用的，以及在 2.1.0 版本之后，使用 exclude 排除之后，
+			就算被包裹在 keep-alive 中，这两个钩子函数依然不会被调用！
+			另外，在服务端渲染时，此钩子函数也不会被调用。 
+		-->
+
+		<!-- 
+			6.用法
+			(1).缓存所有页面
+			在 App.vue 里面 
+		-->
+		<template>
+			<div id="app">
+				<keep-alive>
+					<router-view />
+				</keep-alive>
+			</div>
+		</template>
+
+		<script>
+			export default {
+				name: 'App'
+			}
+		</script>
+
+		<!-- (2).根据条件缓存页面 -->
+		<!-- 在 App.vue 里面 -->
+		<template>
+			<div id="app">
+				<!-- 1. 将缓存 name 为 test 的组件 -->
+				<keep-alive include='test'>
+					<router-view />
+				</keep-alive>
+
+				<!-- 2. 将缓存 name 为 a 或者 b 的组件，结合动态组件使用 -->
+				<keep-alive include='a,b'>
+					<router-view />
+				</keep-alive>
+
+				<!-- 3. 使用正则表达式，需使用 v-bind -->
+				<keep-alive :include='/a|b/'>
+					<router-view />
+				</keep-alive>
+
+				<!-- 4.动态判断 -->
+				<keep-alive :include='includedComponents'>
+					<router-view />
+				</keep-alive>
+
+				<!-- 5. 将不缓存 name 为 test 的组件 -->
+				<keep-alive exclude='test'>
+					<router-view />
+				</keep-alive>
+			</div>
+		</template>
+
+		<script>
+			export default {
+				name: 'App'
+			}
+		</script>
+
+		<!-- (3).结合Router，缓存部分页面 -->
+		<!-- 在 router 目录下的 index.js 文件里 -->
+		<script type="text/javascript">
+			import Vue from 'vue'
+			import Router from 'vue-router'
+			const Home = resolve => require(['@/components/home/home'], resolve)
+			const Goods = resolve => require(['@/components/home/goods'], resolve)
+			const Ratings = resolve => require(['@/components/home/ratings'], resolve)
+			const Seller = resolve => require(['@/components/home/seller'], resolve)
+
+			Vue.use(Router)
+
+			export default new Router({
+				mode: 'history',
+				routes: [{
+					path: '/',
+					name: 'home',
+					component: Home,
+					redirect: 'goods',
+					children: [{
+							path: 'goods',
+							name: 'goods',
+							component: Goods,
+							meta: {
+								keepAlive: false // 不需要缓存
+							}
+						},
+						{
+							path: 'ratings',
+							name: 'ratings',
+							component: Ratings,
+							meta: {
+								keepAlive: true // 需要缓存
+							}
+						},
+						{
+							path: 'seller',
+							name: 'seller',
+							component: Seller,
+							meta: {
+								keepAlive: true // 需要缓存
+							}
+						}
+					]
+				}]
+			})
+		</script>
+
+		<!-- 在 App.vue 里面 -->
+		<template>
+			<div id="app">
+				<keep-alive>
+					<router-view v-if="$route.meta.keepAlive"></router-view>
+				</keep-alive>
+				<router-view v-if="!$route.meta.keepAlive"></router-view>
+			</div>
+			<!-- 根据路由中的meta源信息中的keepAlive字段来判断当前路由组件是否需要缓存 -->
+		</template>
+
+		<script>
+			export default {
+				name: 'App'
+			}
+		</script>
+		
+		
+		<!-- --------vue中前进刷新、后退缓存-------- -->
+		<script>
+			{      
+			    path: '/list',  
+			    name: 'List',      
+			    component: resolve => require(['@/pages/list'], resolve),    
+			    meta: {        
+			        isUseCache: false,  // 这个字段的意思稍后再说      
+			        keepAlive: true  // 通过此字段判断是否需要缓存当前组件  
+			    }    
+			},
+			
+			// 刷新数据or缓存数据的实现：
+			
+			// 设置了keepAlive缓存的组件：
+			// 第一次进入：beforeRouterEnter ->created->…->activated->…->deactivated
+			// 后续进入时：beforeRouterEnter ->activated->deactivated
+			
+			// 只有第一次进入该组件时，才会走created钩子，而需要缓存的组件中activated是每次都会走的钩子函数，
+			// 所以，我们要在这个钩子里面去判断，当前组件是需要使用缓存的数据还是重新刷新获取数据。
+			
+			// 如下：
+			// list组价的activated钩子
+			activated() {
+				// isUseCache为false时才重新刷新获取数据
+				// 因为对list使用keep-alive来缓存组件，所以默认是会使用缓存数据的         
+				if(!this.$route.meta.isUseCache){            
+					this.list = []; // 清空原有数据
+					this.onLoad(); // 这是我们获取数据的函数
+				} 
+			},
+			
+			// 这里的isUseCache 其实就是我们用来判断是否需要使用缓存数据的字段，
+			// 我们在list的路由的meta中已经默认设置为false，所以第一次进入list时是获取数据的。
+			
+			// 当我们从详情页返回时，我们把list页面路由的isUseCache设置成true，
+			// 这样我们在返回list页面时会使用缓存数据：
+			
+			// 详情页面的beforeRouteLeave钩子函数
+			beforeRouteLeave (to, from, next) {        
+			    if (to.name == 'List') {
+			        to.meta.isUseCache = true;    
+			    }        
+			  next();
+			},
+			
+			// 我们这里是在即将离开detail页面前判断是否返回的列表页。如果是返回list页面，
+			// 则把list页面路由的isUseCache字段设置成true。为什么这样设置呢？
+			// 因为我们对list组件使用的keep-alive进行缓存组件，其默认就是使用缓存的。
+			// 而我们又在list组件的actived钩子函数中进行了判断：只有在list页面的isUseCache==false
+			// 时才会清空原有数据并重新获取数据。所以此处设置isUseCache为true，
+			// 此时返会list页面是不会重新获取数据的，而是使用的缓存数据。
+			
+			
+			// detail返回list可以缓存数据了，那么search前往list页面时怎么让list页面不使用缓存数据而是获取新数据呢？
+			// list组价的activated钩子
+			activated() {
+				// isUseCache为false时才重新刷新获取数据
+				// 因为对list使用keep-alive来缓存组件，所以默认是会使用缓存数据的         
+				if(!this.$route.meta.isUseCache){            
+					this.list = []; // 清空原有数据
+					this.onLoad(); // 这是我们获取数据的函数
+				} else {
+					this.$route.meta.isUseCache = false; 
+			    }
+			},
+			
+			// 我们加了一行this.$route.meta.isUseCache=false;也就是从detail返回list后，
+			// 将list的isUseCache字段为false，而从detail返回list前，我们设置了list的isUseCache为true。
+			// 所以，只有从detail返回list才使用缓存数据，而其他页面进入list是重新刷新数据的。
+			
+			
+			// 在一种情况，缓存页 进入的不是detail页面，而是去的别的页面，返回的时候也不让缓存也刷新，
+			// 在进入的页面中写钩子函数：
+			beforeRouteLeave (to, from, next) {  
+			    console.log(to.name)   
+			    console.log(from.name)
+			    //打印一下值  哪一个打印的值等于缓存页面的name 那钩子if 判断语句中就写to.name或者 from.name
+			    //条件和判断语句中一起变动， 要么都是to.   要么都是from.
+			    if (to.name == 'List') {
+			        to.meta.isUseCache = true;                
+			     }        
+			    next();    
+			},
+			
+			// 这种缓存页面进入别的页面，从别的页面返回缓存页面，不刷新，其实就是当返回缓存页面的时候，
+			// 在activated钩子函数进入的是else条件语句，而不是进入的刷新页面语句
+			
+			// 不管是列表缓存页面进入详情页，还是进入其他的页面，返回时位置不变，是要和滚动事件搭配使用
+			//1.给窗口添加滚动事件 
+			window.addEventListener("scroll", () => {
+			    // console.log(123)
+			    var scrollTop =  window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+			     // console.log(scrollTop)
+			     // 获取到页面的滚动出的距离，把值存在缓存中，
+			},true);
+			
+			// 在deactivated钩子中记录当前滚动位置，使用localStorage：
+			deactivated () {
+				window.localStorage.setItem(this.key, JSON.stringify({
+					listScrollTop: this.scrollTop
+				}))
+			}
+			
+			// 在activated钩子中滚动：
+			this.cacheData = window.localStorage.getItem(this.key) ? JSON.parse(window.localStorage.getItem(this.key)) : null
+			$('.sidebar-item').scrollTop(this.cacheData.listScrollTop)
+			
+			
+			// 等到返回到缓存页面的时候 可以在activated钩子函数中的else中 和 
+			// this.$route.meta.isUseCache = false写一起 ， 设置滚动出去的距离就
+			// 等于从localStorage.getItem() 拿出存的距离，这样就做好了，
+			// 可以用beforeRouteLeave钩子函数想让哪个页面刷新或者不刷新都可以做到了
+			
+			activated() {
+				// isUseCache为false时才重新刷新获取数据
+				// 因为对list使用keep-alive来缓存组件，所以默认是会使用缓存数据的         
+				if(!this.$route.meta.isUseCache){            
+					this.list = []; // 清空原有数据
+					this.onLoad(); // 这是我们获取数据的函数
+				} else {
+					this.$route.meta.isUseCache = false; 
+			    }
+			},
+			
+			
+			
+			// 如果场景再复杂一丢丢，比如，如果这个详情页是个订单详情，那么在订单详情页可能会有删除订单的操作。
+			// 那么删除订单操作后会返回订单列表页，是需要列表页重新刷新的。
+			// 那么我们需要此时在订单详情页进行是否要刷新的判断。
+			data () {    
+			    return {
+					isDel: false  // 是否进行了删除订单的操作       
+			    }
+			},
+			beforeRouteLeave (to, from, next) {        
+			    if (to.name == 'List') {
+					// 根据是否删除了订单的状态，进行判断list是否需要使用缓存数据
+					to.meta.isUseCache = !this.isDel;                
+			    }        
+			    next();    
+			},
+			methods: {        
+			    deleteOrder () {       
+					// 这里是一些删除订单的操作
+				
+					// 将状态变为已删除订单
+					// 所以beforeRouteLeave钩子中就会将list组件路由的isUseCache设置为false    
+					// 所以此时再返回list时，list是会重新刷新数据的 
+					this.isDel = true; 
+					this.$router.go(-1)
+			    }
+			},
+			
+			
+			// 页面滚动位置的问题
+			// 在vue这种单页应用中，如果你在a页面滚动了一段距离后，此时前往b页面后，b页面也会停留在a页面的滚动位置。
+			// 这个问题的解决，我们可以利用router本身提供的功能来解决：
+			routes: [    
+			    {      
+			        path: '/detail',      
+			        name: 'Detail',      
+			        component: resolve => require(['@/pages/detail'], resolve)    
+			    }    
+			],
+			scrollBehavior (to, from, savedPosition) {
+			    if (savedPosition) {        
+			        return savedPosition    
+			    } else {      
+			        if (from.meta.keepAlive) {        
+			            from.meta.savedPosition = document.body.scrollTop;      
+			        }        
+			        return { x: 0, y: to.meta.savedPosition || 0 }    
+			    }  
+			}
+			
+			// scrollBehavior是路由提供的基础功能，这段函数写的是：			
+			// 1.如果通过浏览器自带的前进后退按钮切换的路由，那么会自动使用浏览默认的回滚上次页面的浏览位置。
+			
+			// 2.如果是通过vue路由进行的页面切换。例如a前往b，首先判断a是不是通过keep-alive缓存的组件，
+			// 如果是，则在a路由的meta中添加一个savedPosition字段，并且值为a的滚动位置。
+			// 最后return的是页面需要回滚的位置。如此一来，如果打开一个页面，
+			// 该页面的组件路由中meta.savedPosition为undefined的话，则页面滚动到（0,0）的位置，
+			// 这样解决了问题1。那么如果打开一个页面，它的路由的meta.savedPosition有值的话，
+			// 则滚动到上次浏览的位置，因为meta.savedPosition保存的就是上次浏览的位置。
+			
+		</script>
+	</body>
+</html>

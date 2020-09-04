@@ -375,6 +375,46 @@
 			    return arr.join('');    
 			}
 			console.log(cssStyle2DomStyle('-webkit-border-image'))
+			
+			// ------------13.Javascript多维数组扁平化--------------
+			var arr = [[1, 2],[3, 4, 5], [6, 7, 8, 9]];
+			
+			// (1).使用concat()和apply()
+			var newArr = Array.prototype.concat.apply([], arr);
+			console.log(newArr)//[1, 2, 3, 4, 5, 6, 7, 8, 9]
+			
+			// (2)使用reduce()
+			var newArr2 = arr.reduce((prev, curr) => {
+				return prev.concat(curr);
+			})
+			console.log(newArr2)// [1, 2, 3, 4, 5, 6, 7, 8, 9]
+			
+			// 使用 ES6 的展开运算符
+			var newArr3 = [].concat(...arr);
+			console.log(newArr3)//[1, 2, 3, 4, 5, 6, 7, 8, 9]
+			
+			
+			// -----------14.获取文件拓展名------------
+			// (1).正则表达式
+			function getFileExtension1(filename) {
+				return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined;
+			}
+			
+			// (2).String的split方法
+			function getFileExtension2(filename) {
+				return filename.split('.').pop();
+			}
+			
+			// (3). String的slice、lastIndexOf方法
+			function getFileExtension3(filename){
+				return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2)
+			}
+			
+			console.log(getFileExtension3(""))//""
+			console.log(getFileExtension3("filename"))//""
+			console.log(getFileExtension3("filename.txt"))//txt
+			console.log(getFileExtension3(".hiddelfliname"))//""
+			console.log(getFileExtension3("filename.with.many.dots.ext"))//ext
 		</script>
 	</body>
 </html>
